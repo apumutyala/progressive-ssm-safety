@@ -22,7 +22,7 @@ import shutil
 import torch
 import torch.nn.functional as F
 from corpus_io import Corpus
-from corpus_model import make_model, BOS, EOS, VOCAB_SIZE
+from corpus_model import make_model, BOS, EOS, CONFIRM, DEFER, VOCAB_SIZE
 
 ROOT = Path(__file__).resolve().parent
 POLICY = {'seed': 12, 'width': 16, 'batch_size': 8, 'content_context': 128,
@@ -86,6 +86,22 @@ def finite(x, label):
     if not torch.isfinite(x).all().item(): raise RuntimeError(f'Nonfinite {label}.')
 
 
+def audit_ordinary_output(logits, targets, stats, certified):
+    """Measure the unsupported reserved-decision invariant on actual corpus logits."""
+    values = logits.detach()
+    mask = targets != -100
+    margins = values[..., DEFER]-values[..., CONFIRM]
+    finite(margins, 'ordinary unsupported decision margins')
+    minimum = float(margins[mask].min())
+    unsafe = int(((values.argmax(-1) == CONFIRM) & mask).sum())
+    stats.update(ordinary_defer_minus_confirm_min=minimum,
+                 ordinary_unsupported_confirm_argmax=unsafe,
+                 ordinary_output_vectors=int(mask.sum()))
+    if certified and (minimum <= 0 or unsafe):
+        raise RuntimeError('Certified ordinary-text unsupported output invariant failed.')
+    return stats
+
+
 def pack(rows, device):
     length = max(len(r['ids']) for r in rows)-1
     ids = torch.full((len(rows), length), EOS, dtype=torch.long, device=device)
@@ -103,13 +119,20 @@ def pack(rows, device):
 
 
 class AuditAggregate:
-    def __init__(self): self.calls = 0; self.scalars = {}; self.lo = []; self.hi = []; self.outside = []
+    def __init__(self):
+        self.calls = 0; self.scalars = {}; self.lo = []; self.hi = []; self.outside = []
+        self.margin_min = None; self.output_vectors = self.unsafe_confirms = 0
     def add(self, stats, certified):
         if not stats['parameters_finite']: raise RuntimeError('Nonfinite admitted parameters.')
         if certified and (stats['outside_box'] or stats['retention_above_one'] or stats['max_abs_drive'] > 1
                 or stats['retention_min'] < 1/256 or stats['retention_max'] > 255/256):
             raise RuntimeError('Certified effective-weight/state-family invariant failed on executed path.')
         self.calls += 1
+        if 'ordinary_defer_minus_confirm_min' in stats:
+            margin = stats['ordinary_defer_minus_confirm_min']
+            self.margin_min = margin if self.margin_min is None else min(self.margin_min, margin)
+            self.output_vectors += stats['ordinary_output_vectors']
+            self.unsafe_confirms += stats['ordinary_unsupported_confirm_argmax']
         for key, value in stats.items():
             if isinstance(value, (int, float)) and not isinstance(value, bool):
                 old = self.scalars.setdefault(key, {'min': value, 'max': value})
@@ -120,6 +143,9 @@ class AuditAggregate:
                 self.lo[i] = min(self.lo[i], low); self.hi[i] = max(self.hi[i], high); self.outside[i] += count
     def report(self):
         return {'calls': self.calls, 'scalar_min_max_over_calls': self.scalars,
+                'min_ordinary_defer_minus_confirm': self.margin_min,
+                'ordinary_output_vectors': self.output_vectors,
+                'ordinary_unsupported_confirm_argmax_count': self.unsafe_confirms,
                 'hidden_min_by_time_over_calls': self.lo, 'hidden_max_by_time_over_calls': self.hi,
                 'outside_box_by_time_total': self.outside,
                 'scope': 'All executed states in every audited batch, including any computed trailing padding. No audit clamp is applied.'}
@@ -205,6 +231,7 @@ class Worker:
             x, y = pack(rows, self.device)
             self.model.validate_parameters(); self.opt.zero_grad(set_to_none=True)
             logits, before = self.model.audited(x); finite(logits, 'training logits')
+            audit_ordinary_output(logits, y, before, self.a.arm == 'certified')
             self.pre_audit.add(before, self.a.arm == 'certified')
             losses = F.cross_entropy(logits.flatten(0, 1), y.flatten(), reduction='none', ignore_index=-100).view_as(y)
             mask = y != -100
@@ -215,6 +242,7 @@ class Worker:
             self.opt.step(); self.model.validate_parameters()
             with torch.no_grad():
                 after_logits, after = self.model.audited(x); finite(after_logits, 'post-update logits')
+                audit_ordinary_output(after_logits, y, after, self.a.arm == 'certified')
             self.post_audit.add(after, self.a.arm == 'certified')
             byte_count = int((y >= 8).sum()); frame_count = int(((y >= 0) & (y < 8)).sum())
             self.step += 1; self.byte_targets += byte_count; self.framing_targets += frame_count
@@ -224,6 +252,10 @@ class Worker:
             self.losses.append({'step': self.step, 'loss': float(loss.detach()), 'byte_targets': byte_count,
                 'framing_targets': frame_count, 'pre_hidden_min': before['hidden_min'], 'pre_hidden_max': before['hidden_max'],
                 'post_hidden_min': after['hidden_min'], 'post_hidden_max': after['hidden_max'],
+                'pre_min_unsupported_margin': before['ordinary_defer_minus_confirm_min'],
+                'post_min_unsupported_margin': after['ordinary_defer_minus_confirm_min'],
+                'pre_unsupported_confirm_argmax': before['ordinary_unsupported_confirm_argmax'],
+                'post_unsupported_confirm_argmax': after['ordinary_unsupported_confirm_argmax'],
                 'pre_outside_box': before['outside_box'], 'post_outside_box': after['outside_box']})
 
     @torch.no_grad()
@@ -237,6 +269,7 @@ class Worker:
         for start in range(0, len(rows), 8):
             self.check(); x, y = pack(rows[start:start+8], self.device)
             logits, stats = self.model.audited(x); finite(logits, 'holdout logits')
+            audit_ordinary_output(logits, y, stats, self.a.arm == 'certified')
             audit.add(stats, self.a.arm == 'certified')
             losses = F.cross_entropy(logits.flatten(0, 1), y.flatten(), reduction='none', ignore_index=-100).view_as(y)
             mask = y != -100; byte_mask = y >= 8
@@ -252,7 +285,7 @@ class Worker:
     def growth_audit(self):
         self.check()
         rows = self.corpus.sample_batch(step=0, seed=12, batch_size=8, seq_len=128)
-        x, _ = pack(rows, self.device)
+        x, y = pack(rows, self.device)
         devices = [torch.cuda.current_device()] if self.a.device == 'cuda' else []
         with torch.random.fork_rng(devices=devices):
             disposable = copy.deepcopy(self.model).eval()
@@ -261,12 +294,19 @@ class Worker:
             disposable.grow(); disposable.validate_parameters()
             new_logits, new_audit = disposable.audited(x); new_prefill = disposable.prefill(x)[0]
             finite(new_logits, 'grown logits'); finite(new_prefill, 'grown prefill logits')
+            audit_ordinary_output(old_logits, y, old_audit, self.a.arm == 'certified')
+            audit_ordinary_output(new_logits, y, new_audit, self.a.arm == 'certified')
+            old_prefill_output = audit_ordinary_output(old_prefill, y, {}, self.a.arm == 'certified')
+            new_prefill_output = audit_ordinary_output(new_prefill, y, {}, self.a.arm == 'certified')
             audit = AuditAggregate(); audit.add(old_audit, self.a.arm == 'certified'); audit.add(new_audit, self.a.arm == 'certified')
             equal = torch.equal(old_logits, new_logits) and torch.equal(old_prefill, new_prefill)
             if not equal: raise RuntimeError('Actual fitted checkpoint growth changed full unchanged-path logits.')
             return {'exact_equal': equal, 'forward_logit_coordinates': old_logits.numel(),
                 'prefill_logit_coordinates': old_prefill.numel(), 'max_abs_delta': float((old_logits-new_logits).abs().max()),
                 'old_parameters': old_count, 'new_parameters': sum(p.numel() for p in disposable.parameters()),
+                'before_forward_output': {k: v for k, v in old_audit.items() if k.startswith('ordinary_')},
+                'after_forward_output': {k: v for k, v in new_audit.items() if k.startswith('ordinary_')},
+                'before_prefill_output': old_prefill_output, 'after_prefill_output': new_prefill_output,
                 'audit': audit.report(), 'scope': 'Disposable fitted checkpoint copy on actual ordinary training bytes; no growth optimization or capability claim.'}
 
     @torch.no_grad()
