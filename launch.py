@@ -34,30 +34,21 @@ def worker(args):
             raise RuntimeError("Omen GPU identity or available VRAM failed admission")
     torch.set_num_threads(1)
     torch.set_num_interop_threads(1)
-    if args.mode == "device-check":
-        from device_check import run
-        run()
-        return 0
-    if args.mode in ("generate", "prefix-bound", "route-probe"):
-        script = {"generate":"generate.py", "prefix-bound":"prefix_bound.py", "route-probe":"route_probe.py"}[args.mode]
-        sys.argv = [script, *args.tail]
-        runpy.run_path(str(ROOT / script), run_name="__main__")
-        return 0
     if args.mode == "test":
         import unittest
         suite = unittest.defaultTestLoader.discover(str(ROOT), "test*.py")
         if not suite.countTestCases():
             raise RuntimeError("No tests discovered")
         return int(not unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful())
-    sys.argv = ["experiment.py", *args.tail]
-    runpy.run_path(str(ROOT / "experiment.py"), run_name="__main__")
+    sys.argv = ["pretrain.py", *args.tail]
+    runpy.run_path(str(ROOT / "pretrain.py"), run_name="__main__")
     return 0
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site", type=Path, required=True, help="Installed site-packages directory")
-    parser.add_argument("--mode", choices=("train", "test", "device-check", "generate", "prefix-bound", "route-probe"), required=True)
+    parser.add_argument("--mode", choices=("corpus", "test"), required=True)
     parser.add_argument("--receipt", type=Path, required=True, help="Fresh path outside checkout")
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("tail", nargs=argparse.REMAINDER)
@@ -73,7 +64,7 @@ def main():
     if receipt.is_relative_to(ROOT) or receipt.exists() or not receipt.parent.is_dir():
         parser.error("Provide a fresh receipt path in an existing directory outside the checkout")
     output = None
-    if args.mode == "train":
+    if args.mode == "corpus":
         train = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
         train.add_argument("--output", type=Path, required=True)
         train.add_argument("--device", choices=("cpu", "cuda"), required=True)
@@ -88,7 +79,16 @@ def main():
         raise RuntimeError("Insufficient disk headroom")
     env = dict(os.environ, CUDA_CACHE_DISABLE="1", CUBLAS_WORKSPACE_CONFIG=":4096:8",
                OMP_NUM_THREADS="1", MKL_NUM_THREADS="1", PYTHONDONTWRITEBYTECODE="1")
-    if args.mode in ("test", "generate", "prefix-bound", "route-probe") or (args.mode == "train" and job.device == "cpu"):
+    campaign = (ROOT.parent / "certified-runs").resolve()
+    if receipt.parent != campaign:
+        parser.error("Use the shared certified-runs directory for the resource ledger")
+    retained = sum(p.stat().st_size for p in campaign.rglob("*") if p.is_file())
+    remaining = min(4*MIB, 32*MIB - retained) - 512*1024
+    if remaining < 256*1024:
+        parser.error("Insufficient space within the shared campaign artifact cap")
+    env["CORPUS_MAX_ARTIFACT_BYTES"] = str(remaining)
+    env["PAIRED_MAX_ARTIFACT_BYTES"] = str(remaining)
+    if args.mode == "test" or job.device == "cpu":
         env["CUDA_VISIBLE_DEVICES"] = ""
     else:
         env["CUDA_VISIBLE_DEVICES"] = "0"

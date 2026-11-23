@@ -6,3 +6,11 @@ __pycache__/
 *.safetensors
 runs/
 .env*
+*.pth
+*.ckpt
+*.jsonl
+*.json.gz
+*.txt
+corpus-intake-local/
+private/
+checkpoints/

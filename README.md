@@ -1,45 +1,22 @@
-# Growing a language model under a decision guarantee
+# Controlled state-space language pretraining
 
-Can a language model gain useful reasoning capacity without gaining the ability to approve an unsupported plan? This project trains a small autoregressive state-space model from scratch. It predicts every next token, consumes a prompt in one pass, then generates words one at a time from its recurrent state. Its vocabulary includes two reserved decision tokens, `<confirm>` and `<defer>`. Both compete directly with all ordinary words.
+This branch trains an autoregressive state-space language model from random initialization on ordinary UTF-8 text. It predicts the next byte. The learned state transition and output readout are constrained at initialization, during Adam updates and at zero-connected growth. A matched comparison model has the same parameter shapes and data access and relaxes both constraints.
 
-Start with [the measured results and an actual failure](RESULTS.md), [the scoped experiment](EXPERIMENT.md), or [the mathematical claim and its assumptions](PROOF.md).
+The central question is whether an architecture can learn to predict language while retaining a property proved over **every admitted set of weights**. The first property concerns the hidden state throughout ordinary prose. The second concerns a reserved decision token when the input contains authenticated facts. Neither establishes the truth or safety of arbitrary generated English.
 
-## The experiment
+## Where to start
 
-Two shipments have different permits, capacity estimates and load estimates. Suppose A has at least 500,000 units of capacity and needs at most 400,000. B has at least 400,000 and may need 500,000. Both have permits. Switching the requested shipment from A to B should change the answer even though every receipt stays the same. Guarantees refer to conservative bounds on the underlying facts; the model's ability to write a useful route and explanation is measured separately.
+- [Smoke protocol](SMOKE_PROTOCOL.md) describes the corpus-first comparison, checkpoint-resume test and held-out evaluations.
+- [Control argument](CONTROL.md) defines the state set, assumptions, optimizer closure, influence of prior context and proof-preserving insertion.
+- [Measured results](CORPUS_RESULTS.md) reports the corpus split, actual update counts, training and held-out losses, state bounds, free-language failures and limits.
+- `corpus_io.py` validates externally supplied documents, rights metadata and split assignments. `corpus_model.py` implements byte encoding, prefill, cached decoding and the actual constrained and comparison recurrent dynamics.
+- `pretrain.py` is the training entry point. `semantic_eval.py` is a separate downstream evaluator. `corpus_sensitivity.py` tests the influence of earlier hidden state on ordinary byte sequences. Evaluation cases are never passed to the optimizer.
 
-* **Learned state.** A token selects per-coordinate retention and new input. Separate recurrent blocks learn features for next-word prediction. Ordinary text influences those features and the full-vocabulary competition. Sources: [model](model.py), [constrained recurrence and readout](PROOF.md).
-* **Protected state.** A parallel part of the same recurrent model stores trusted receipts. The simplest experiment stores two prerequisite flags. The interval experiment stores three primitive values per named plan and computes feasibility inside the recurrence. Words such as “approved” in an untrusted note cannot replace a receipt. See [interval model](interval_model.py) and [data contract](DATA.md).
-* **What is certified.** In the specified greedy decoding protocol, a missing permit, missing bound, or insufficient guaranteed capacity keeps the raw `<confirm>` score below `<defer>`. Every learnable weight setting admitted by the model obeys that separation, including immediately after initialization, after optimization, and after width growth. Sampled text, the truth of a forged receipt, and the meaning of an ordinary sentence fall outside this property. The proof and its numerical assumptions are in [PROOF.md](PROOF.md).
-* **What must be learned.** The model still has to emit a decision at the right time, remember the requested route, bind the correct entity, and explain the choice in words. It can satisfy the guarantee while failing every one of these tasks. Score the exact raw continuation and positive coverage alongside the guaranteed inequality.
+Provide an authorized local corpus and an external manifest. Source and work identity determine train/development/evaluation splits; the tokenizer does not learn a vocabulary from any split. The smoke uses a single small literary training source. Larger, more diverse corpora would be needed for general language capability.
 
-## Growth and controls
+## Comparing outputs honestly
 
-Growth appends an independently driven block with a zero output head. Its first gradient can open a path to the vocabulary without changing any existing logit at insertion. The experiment compares all vocabulary logits before/after insertion and retains the original Adam moments. It measures loss with the trained new head removed. Distinguish deliberate test insertion (`--growth-mode smoke`) from the plateau arm, which requires repeated development observations of both loss and useful-response performance. A brief calibration cannot establish saturation.
+A tiny model can reduce its prediction loss on prose and still produce unreadable text. Evaluate byte prediction, intelligible free generation, decision coverage, semantic contradictions and the formal invariant separately. Greedy generation, typed provenance, a fixed first query and finite FP32 execution are part of the decision contract. Stochastic decoding, misleading synonyms and a false source record require different arguments.
 
-Use the same ordered samples and seed to compare small continuation, same-size optimizer restart, and an identical final-size model trained from scratch. Report token count, parameter-target products, wall time, steps at full size and held-out performance. Parameter-target products are an accounting proxy. Counting equal updates alone gives a bigger model more compute. Growth earns another rung only if it retains the guarantee and improves a predeclared capability metric relative to a fair control.
+Earlier fictional route experiments are available at the repository's parent release. This branch's tree intentionally excludes their raw answers and all local texts, checkpoints and private evaluation material.
 
-## Reproduce
-
-Python 3.12 with PyTorch, no network access needed for the included data. The Windows supervisor uses the Omen's existing pinned Python 3.12.10 / Torch 2.14.1+cu130 installation. Use the actual paths for that installation as environment variables `PY312` and `TORCH_SITE`. Create a new output directory outside the checkout for the campaign. The supervisor admits one child per invocation; run these sequentially on a single GPU.
-
-~~~powershell
-$campaign = Join-Path (Split-Path (Get-Location)) 'my-ssm-runs'
-New-Item -ItemType Directory -Path $campaign -Force | Out-Null
-& $env:PY312 -I -S -B launch.py --site $env:TORCH_SITE --mode test --receipt "$campaign/tests.json"
-& $env:PY312 -I -S -B launch.py --site $env:TORCH_SITE --mode train --receipt "$campaign/base-supervisor.json" -- --device cuda --task interval --output "$campaign/base" --arm base --width 16 --seed 12 --batch-size 12 --steps 128 --eval-every 64 --max-new-tokens 24 --max-seconds 100
-~~~
-
-Use `experiment.py --help` for controls and resume arguments. Each resume consumes a matching source, configuration and SHA-256-pinned local checkpoint. Use new output and receipt paths for each run. Complete local artifacts include the learned weights, optimizer state, runtime measurements and per-example outputs. Only selected reproducible source and sanitized evidence belong in Git. The open research questions and prior work are in [RESEARCH.md](RESEARCH.md).
-
-## Try an ordinary prompt
-
-The mixed training arm uses a local train-only prose pack. See [MIXED_DATA.md](MIXED_DATA.md) for its identity, data budget and encoding. The repository includes the synthetic program and evaluation fixtures; the external training corpus and Omen checkpoints stay on the device. Inference needs a matching checkpoint and can use the embedded byte codec without the training pack. The model is a research language model trained from scratch. Its current free-text output is not coherent enough for a chat assistant.
-
-From the project directory, set `$checkpoint` to a locally generated mixed checkpoint path and `$sha` to the exact digest in its adjacent manifest. Then run:
-
-~~~powershell
-& $env:PY312 -I -S -B launch.py --site $env:TORCH_SITE --mode generate --receipt "$campaign/prompt-receipt.json" -- --checkpoint $checkpoint --sha256 $sha --task mixed --device cpu --output "$campaign/prompt-result" --prompt "The garden was quiet in the morning." --max-new-tokens 32
-~~~
-
-For a scenario with verified primitive receipts, replace the prompt argument with `--case-id test-interval-0-equality-qa`. Source snapshots are part of checkpoint compatibility. Use commit `63b383962633f5c68e7ccc1926f763cc234e6a65` to resume the original interval-only comparison. The current checkout handles mixed training and ordinary prompt inference.
