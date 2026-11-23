@@ -1,0 +1,129 @@
+{
+  "task": "planning",
+  "arm": "base",
+  "seed": 12,
+  "step": 128,
+  "parameters": 16457,
+  "blocks": 1,
+  "targets": 96156,
+  "parameter_target_products": 1582439292,
+  "loss": {
+    "dev": {
+      "loss": 3.9215598310791893,
+      "perplexity": 50.47912230410811,
+      "targets": 6975,
+      "by_kind": {
+        "decision": {
+          "nll_sum": 26694.444580078125,
+          "targets": 6856,
+          "response_nll_sum": 4958.3319091796875,
+          "response_targets": 1624,
+          "useful_response_exact": 0,
+          "rows": 96,
+          "loss": 3.893588766055736,
+          "perplexity": 49.0867315977313,
+          "response_loss": 3.05316004259833
+        },
+        "prose": {
+          "nll_sum": 658.4352416992188,
+          "targets": 119,
+          "response_nll_sum": 469.4012451171875,
+          "response_targets": 84,
+          "useful_response_exact": 0,
+          "rows": 4,
+          "loss": 5.533069257976628,
+          "perplexity": 252.91899459092795,
+          "response_loss": 5.588110060918899
+        }
+      }
+    },
+    "test": {
+      "loss": 3.9448756251759063,
+      "perplexity": 51.6699112763211,
+      "targets": 6884,
+      "by_kind": {
+        "decision": {
+          "nll_sum": 26490.192626953125,
+          "targets": 6760,
+          "response_nll_sum": 4990.701965332031,
+          "response_targets": 1624,
+          "useful_response_exact": 0,
+          "rows": 96,
+          "loss": 3.918667548365847,
+          "perplexity": 50.33333334435797,
+          "response_loss": 3.073092343184748
+        },
+        "prose": {
+          "nll_sum": 666.3311767578125,
+          "targets": 124,
+          "response_nll_sum": 466.6225280761719,
+          "response_targets": 86,
+          "useful_response_exact": 0,
+          "rows": 4,
+          "loss": 5.373638522240423,
+          "perplexity": 215.6460750216771,
+          "response_loss": 5.425843349722928
+        }
+      }
+    }
+  },
+  "greedy": {
+    "dev": {
+      "rows": 100,
+      "decision_rows": 96,
+      "marker_present": 0,
+      "marker_correct": 0,
+      "supported_rows": 24,
+      "unsupported_rows": 72,
+      "unsafe_confirms": 0,
+      "unsupported_original_request_confirms": 0,
+      "wrong_referent_confirms": 0,
+      "unnecessary_deferrals": 0,
+      "exact_references": 0,
+      "route_correct": 0,
+      "useful_continuation_exact": 0,
+      "length_capped": 100,
+      "supported_first_token_correct": 0,
+      "unsupported_first_token_correct": 0
+    },
+    "test": {
+      "rows": 100,
+      "decision_rows": 96,
+      "marker_present": 0,
+      "marker_correct": 0,
+      "supported_rows": 24,
+      "unsupported_rows": 72,
+      "unsafe_confirms": 0,
+      "unsupported_original_request_confirms": 0,
+      "wrong_referent_confirms": 0,
+      "unnecessary_deferrals": 0,
+      "exact_references": 0,
+      "route_correct": 0,
+      "useful_continuation_exact": 0,
+      "length_capped": 100,
+      "supported_first_token_correct": 0,
+      "unsupported_first_token_correct": 0
+    }
+  },
+  "growth": null,
+  "new_parameter_max_abs_deltas": {},
+  "checkpoint_sha256": "2c03188b8936fbe30d72579026b0e88229980f01292596a6f49e3db53c106a2b",
+  "local_results_sha256": "dd7d3eef041240790b52d41c830ec5a4d25ee0e45773eadb2454963ae18819ff",
+  "model_sha256": "023149d9d9278269b6cece722bd1e0256255269e8f6557b3d3e48f8859a3c0ab",
+  "dataset_sha256": "6b86225fe47a61f5aad2bc5ba08145c79c84244420fc0d92cb5af6d065593367",
+  "source_sha256": {
+    "experiment.py": "9170126652aa3a3cf136caa4588742659ae1a4d30151d792f688b5ed6bdcda83",
+    "model.py": "61ca237e6296ddc79ce02fb457ae62087f9724517ffc1a8d4c8492df09229abf",
+    "data.py": "9d301df4cdb8092520ec05b14b0c437f8afbfa8d5e57a9e39b27f9385a5cd0d3"
+  },
+  "device": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+  "peak_reserved_bytes": 75497472,
+  "wall_seconds": 11.062000000001717,
+  "worker_cumulative_seconds": 8.0,
+  "ablations": {
+    "new_block_causal_ablation": {
+      "applicable": false
+    }
+  },
+  "predictions_sha256": "5e1cef7f091907017cda1b2ac924920823bd1c10dd4e50f8eb11c665938511a4"
+}

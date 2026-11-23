@@ -125,13 +125,12 @@ capacity upper and demand lower bounds make the uncertainty concrete in text;
 only the extrema necessary for this claim enter the certificate registers.
 No correlations outside this independent uncertainty model are assumed.
 
-`<query_a>` and `<query_b>` are atomic input tokens (IDs 6 and 7); they bind the
-current requested plan. Initially there is no query. The last consumed query
-token determines the certificate's subject. The decision interpretation covers
-the `<confirm>` marker for that subject only. If a model generates a new query
-token, that changes the subject after it is consumed; evaluation must flag any
-departure from the requested plan as task failure. The certificate cannot mean
-confirmation of the original plan after an unreported subject change. Normal
+`<query_a>` and `<query_b>` are atomic input tokens (IDs 6 and 7). The first
+query in a fresh episode binds the requested plan. Later words and generated
+query tokens cannot change that binding. An untrusted prefix containing the
+first query would bind the wrong plan; the claim about the user's intended
+plan assumes correct episode framing. The decision interpretation covers the
+`<confirm>` marker for that bound subject only. Normal
 prose examples have no query and no fact events. Permission and bounds remain
 trusted metadata assumptions, not claims that arbitrary prose has been parsed
 or authenticated correctly.

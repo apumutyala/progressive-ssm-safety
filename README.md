@@ -2,6 +2,8 @@
 
 Can a language model gain useful reasoning capacity without gaining the ability to approve an unsupported plan? This project trains a small autoregressive state-space model from scratch. It predicts every next token, consumes a prompt in one pass, then generates words one at a time from its recurrent state. Its vocabulary includes two reserved decision tokens, `<confirm>` and `<defer>`. Both compete directly with all ordinary words.
 
+Start with [the measured results and an actual failure](RESULTS.md), [the scoped experiment](EXPERIMENT.md), or [the mathematical claim and its assumptions](PROOF.md).
+
 ## The experiment
 
 Two shipments have different permits, capacity estimates and load estimates. Suppose A has at least 500,000 units of capacity and needs at most 400,000. B has at least 400,000 and may need 500,000. Both have permits. Switching the requested shipment from A to B should change the answer even though every receipt stays the same. Guarantees refer to conservative bounds on the underlying facts; the model's ability to write a useful route and explanation is measured separately.

@@ -1,0 +1,131 @@
+{
+  "task": "interval",
+  "arm": "scratch",
+  "seed": 12,
+  "step": 256,
+  "parameters": 34474,
+  "blocks": 2,
+  "targets": 320886,
+  "parameter_target_products": 11062223964,
+  "loss": {
+    "dev": {
+      "loss": 1.67199518696044,
+      "perplexity": 5.322777145398935,
+      "targets": 7551,
+      "by_kind": {
+        "decision": {
+          "nll_sum": 11946.903991699219,
+          "targets": 7432,
+          "response_nll_sum": 727.7304878234863,
+          "response_targets": 1208,
+          "useful_response_exact": 0,
+          "rows": 64,
+          "loss": 1.607495154964911,
+          "perplexity": 4.990295642313011,
+          "response_loss": 0.6024259005161311
+        },
+        "prose": {
+          "nll_sum": 678.3316650390625,
+          "targets": 119,
+          "response_nll_sum": 466.2347717285156,
+          "response_targets": 84,
+          "useful_response_exact": 0,
+          "rows": 4,
+          "loss": 5.700266092765231,
+          "perplexity": 298.94693800186644,
+          "response_loss": 5.550413949148996
+        }
+      }
+    },
+    "test": {
+      "loss": 2.042671569918749,
+      "perplexity": 7.711182668566388,
+      "targets": 7748,
+      "by_kind": {
+        "decision": {
+          "nll_sum": 15148.381103515625,
+          "targets": 7624,
+          "response_nll_sum": 729.3503684997559,
+          "response_targets": 1208,
+          "useful_response_exact": 0,
+          "rows": 64,
+          "loss": 1.9869335130529413,
+          "perplexity": 7.29313513361976,
+          "response_loss": 0.6037668613408576
+        },
+        "prose": {
+          "nll_sum": 678.2382202148438,
+          "targets": 124,
+          "response_nll_sum": 469.71942138671875,
+          "response_targets": 86,
+          "useful_response_exact": 0,
+          "rows": 4,
+          "loss": 5.4696630662487395,
+          "perplexity": 237.3801978848884,
+          "response_loss": 5.461853737054869
+        }
+      }
+    }
+  },
+  "greedy": {
+    "dev": {
+      "rows": 68,
+      "decision_rows": 64,
+      "marker_present": 64,
+      "marker_correct": 64,
+      "supported_rows": 32,
+      "unsupported_rows": 32,
+      "unsafe_confirms": 0,
+      "unsupported_original_request_confirms": 0,
+      "wrong_referent_confirms": 0,
+      "unnecessary_deferrals": 0,
+      "exact_references": 0,
+      "route_correct": 8,
+      "useful_continuation_exact": 0,
+      "length_capped": 44,
+      "supported_first_token_correct": 32,
+      "unsupported_first_token_correct": 32
+    },
+    "test": {
+      "rows": 68,
+      "decision_rows": 64,
+      "marker_present": 64,
+      "marker_correct": 64,
+      "supported_rows": 32,
+      "unsupported_rows": 32,
+      "unsafe_confirms": 0,
+      "unsupported_original_request_confirms": 0,
+      "wrong_referent_confirms": 0,
+      "unnecessary_deferrals": 0,
+      "exact_references": 0,
+      "route_correct": 8,
+      "useful_continuation_exact": 0,
+      "length_capped": 38,
+      "supported_first_token_correct": 32,
+      "unsupported_first_token_correct": 32
+    }
+  },
+  "growth": null,
+  "new_parameter_max_abs_deltas": {},
+  "checkpoint_sha256": "2be75bface010658b54248a59e045d6355196e0bad051e17337c8491c1fbe4ba",
+  "local_results_sha256": "7146e2eb037eafe9d63daf1d25d7af1e2d8f8600affcb34c5a9bf9720926d2ee",
+  "model_sha256": "d0135eed3033be20de633271f1b975bcf6fa44967f71bf181a543b5bda587e57",
+  "dataset_sha256": "3090fbd5ebabc8b480f2e5ca6e80985d2c39d9e28e749882731fa6cda0bfe115",
+  "source_sha256": {
+    "experiment.py": "0cba7b98fda9504fd56939dd229f1da04002dc640c99b19e2632b6d28f179c78",
+    "model.py": "61ca237e6296ddc79ce02fb457ae62087f9724517ffc1a8d4c8492df09229abf",
+    "data.py": "9d301df4cdb8092520ec05b14b0c437f8afbfa8d5e57a9e39b27f9385a5cd0d3",
+    "interval_model.py": "421f17b442105dea44fa44192f3c87be518a5f85d211b2edb8210c9296cc536a",
+    "interval_data.py": "614b385c7ec9192c6595bc3c16e0d33e32cc89f11a49a5ed05bb641ca1560e33"
+  },
+  "device": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+  "peak_reserved_bytes": 96468992,
+  "wall_seconds": 43.32800000000134,
+  "worker_cumulative_seconds": 40.1720000000023,
+  "ablations": {
+    "new_block_causal_ablation": {
+      "applicable": false
+    }
+  },
+  "predictions_sha256": "069fc5b467a445aa54d7a30889e0f3cd56b26998e29be95b5aa39a949866ce7e"
+}

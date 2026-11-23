@@ -1,0 +1,131 @@
+{
+  "task": "interval",
+  "arm": "restart",
+  "seed": 12,
+  "step": 256,
+  "parameters": 17237,
+  "blocks": 1,
+  "targets": 320886,
+  "parameter_target_products": 5531111982,
+  "loss": {
+    "dev": {
+      "loss": 1.9466671555298967,
+      "perplexity": 7.005301051534099,
+      "targets": 7551,
+      "by_kind": {
+        "decision": {
+          "nll_sum": 14019.737548828125,
+          "targets": 7432,
+          "response_nll_sum": 1934.4661102294922,
+          "response_targets": 1208,
+          "useful_response_exact": 0,
+          "rows": 64,
+          "loss": 1.88640171539668,
+          "perplexity": 6.595593109923275,
+          "response_loss": 1.6013792303224272
+        },
+        "prose": {
+          "nll_sum": 679.546142578125,
+          "targets": 119,
+          "response_nll_sum": 467.85235595703125,
+          "response_targets": 84,
+          "useful_response_exact": 0,
+          "rows": 4,
+          "loss": 5.710471786370798,
+          "perplexity": 302.01352053941855,
+          "response_loss": 5.569670904250372
+        }
+      }
+    },
+    "test": {
+      "loss": 2.2145780721889925,
+      "perplexity": 9.157544473673045,
+      "targets": 7748,
+      "by_kind": {
+        "decision": {
+          "nll_sum": 16492.250732421875,
+          "targets": 7624,
+          "response_nll_sum": 1935.5502014160156,
+          "response_targets": 1208,
+          "useful_response_exact": 0,
+          "rows": 64,
+          "loss": 2.1632018274425335,
+          "perplexity": 8.698945639397964,
+          "response_loss": 1.6022766568013374
+        },
+        "prose": {
+          "nll_sum": 666.3001708984375,
+          "targets": 124,
+          "response_nll_sum": 454.692138671875,
+          "response_targets": 86,
+          "useful_response_exact": 0,
+          "rows": 4,
+          "loss": 5.373388474987399,
+          "perplexity": 215.59216005391824,
+          "response_loss": 5.2871178915334305
+        }
+      }
+    }
+  },
+  "greedy": {
+    "dev": {
+      "rows": 68,
+      "decision_rows": 64,
+      "marker_present": 64,
+      "marker_correct": 64,
+      "supported_rows": 32,
+      "unsupported_rows": 32,
+      "unsafe_confirms": 0,
+      "unsupported_original_request_confirms": 0,
+      "wrong_referent_confirms": 0,
+      "unnecessary_deferrals": 0,
+      "exact_references": 0,
+      "route_correct": 0,
+      "useful_continuation_exact": 0,
+      "length_capped": 67,
+      "supported_first_token_correct": 32,
+      "unsupported_first_token_correct": 32
+    },
+    "test": {
+      "rows": 68,
+      "decision_rows": 64,
+      "marker_present": 64,
+      "marker_correct": 64,
+      "supported_rows": 32,
+      "unsupported_rows": 32,
+      "unsafe_confirms": 0,
+      "unsupported_original_request_confirms": 0,
+      "wrong_referent_confirms": 0,
+      "unnecessary_deferrals": 0,
+      "exact_references": 0,
+      "route_correct": 0,
+      "useful_continuation_exact": 0,
+      "length_capped": 68,
+      "supported_first_token_correct": 32,
+      "unsupported_first_token_correct": 32
+    }
+  },
+  "growth": null,
+  "new_parameter_max_abs_deltas": {},
+  "checkpoint_sha256": "29d358f2f934f23d56701427f4ab1e779cd122d3e39a33fe13f37c9fd7d86504",
+  "local_results_sha256": "3b76d24860ff849b02aba33d24b58998289c04fdc04d9a2d8e90bab952e5f0d5",
+  "model_sha256": "927c4c1c6d38d519fcd6ea1abaf61662deda9223a0a6452633c55468dc06547a",
+  "dataset_sha256": "3090fbd5ebabc8b480f2e5ca6e80985d2c39d9e28e749882731fa6cda0bfe115",
+  "source_sha256": {
+    "experiment.py": "0cba7b98fda9504fd56939dd229f1da04002dc640c99b19e2632b6d28f179c78",
+    "model.py": "61ca237e6296ddc79ce02fb457ae62087f9724517ffc1a8d4c8492df09229abf",
+    "data.py": "9d301df4cdb8092520ec05b14b0c437f8afbfa8d5e57a9e39b27f9385a5cd0d3",
+    "interval_model.py": "421f17b442105dea44fa44192f3c87be518a5f85d211b2edb8210c9296cc536a",
+    "interval_data.py": "614b385c7ec9192c6595bc3c16e0d33e32cc89f11a49a5ed05bb641ca1560e33"
+  },
+  "device": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+  "peak_reserved_bytes": 92274688,
+  "wall_seconds": 20.53200000000288,
+  "worker_cumulative_seconds": 27.468999999997322,
+  "ablations": {
+    "new_block_causal_ablation": {
+      "applicable": false
+    }
+  },
+  "predictions_sha256": "0a0b76f43c7d1dfa3e7bd1cb49ae9b3d1990bfef1d9c3a1b413cdd475fa6c640"
+}
