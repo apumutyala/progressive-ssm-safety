@@ -40,6 +40,10 @@ def worker(args):
         if not suite.countTestCases():
             raise RuntimeError("No tests discovered")
         return int(not unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful())
+    if args.mode == "verify-resume":
+        sys.argv = ["verify_resume.py", *args.tail]
+        runpy.run_path(str(ROOT / "verify_resume.py"), run_name="__main__")
+        return 0
     sys.argv = ["pretrain.py", *args.tail]
     runpy.run_path(str(ROOT / "pretrain.py"), run_name="__main__")
     return 0
@@ -48,7 +52,7 @@ def worker(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site", type=Path, required=True, help="Installed site-packages directory")
-    parser.add_argument("--mode", choices=("corpus", "test"), required=True)
+    parser.add_argument("--mode", choices=("corpus", "test", "verify-resume"), required=True)
     parser.add_argument("--receipt", type=Path, required=True, help="Fresh path outside checkout")
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("tail", nargs=argparse.REMAINDER)
@@ -88,7 +92,7 @@ def main():
         parser.error("Insufficient space within the shared campaign artifact cap")
     env["CORPUS_MAX_ARTIFACT_BYTES"] = str(remaining)
     env["PAIRED_MAX_ARTIFACT_BYTES"] = str(remaining)
-    if args.mode == "test" or job.device == "cpu":
+    if args.mode in ("test","verify-resume") or job.device == "cpu":
         env["CUDA_VISIBLE_DEVICES"] = ""
     else:
         env["CUDA_VISIBLE_DEVICES"] = "0"
