@@ -34,6 +34,15 @@ def worker(args):
             raise RuntimeError("Omen GPU identity or available VRAM failed admission")
     torch.set_num_threads(1)
     torch.set_num_interop_threads(1)
+    if args.mode == "device-check":
+        from device_check import run
+        run()
+        return 0
+    if args.mode in ("generate", "prefix-bound", "route-probe"):
+        script = {"generate":"generate.py", "prefix-bound":"prefix_bound.py", "route-probe":"route_probe.py"}[args.mode]
+        sys.argv = [script, *args.tail]
+        runpy.run_path(str(ROOT / script), run_name="__main__")
+        return 0
     if args.mode == "test":
         import unittest
         suite = unittest.defaultTestLoader.discover(str(ROOT), "test*.py")
@@ -48,7 +57,7 @@ def worker(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site", type=Path, required=True, help="Installed site-packages directory")
-    parser.add_argument("--mode", choices=("train", "test"), required=True)
+    parser.add_argument("--mode", choices=("train", "test", "device-check", "generate", "prefix-bound", "route-probe"), required=True)
     parser.add_argument("--receipt", type=Path, required=True, help="Fresh path outside checkout")
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("tail", nargs=argparse.REMAINDER)
@@ -79,7 +88,7 @@ def main():
         raise RuntimeError("Insufficient disk headroom")
     env = dict(os.environ, CUDA_CACHE_DISABLE="1", CUBLAS_WORKSPACE_CONFIG=":4096:8",
                OMP_NUM_THREADS="1", MKL_NUM_THREADS="1", PYTHONDONTWRITEBYTECODE="1")
-    if args.mode == "test" or job.device == "cpu":
+    if args.mode in ("test", "generate", "prefix-bound", "route-probe") or (args.mode == "train" and job.device == "cpu"):
         env["CUDA_VISIBLE_DEVICES"] = ""
     else:
         env["CUDA_VISIBLE_DEVICES"] = "0"

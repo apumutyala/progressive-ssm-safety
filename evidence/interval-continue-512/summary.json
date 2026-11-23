@@ -1,0 +1,131 @@
+{
+  "task": "interval",
+  "arm": "continue",
+  "seed": 12,
+  "step": 512,
+  "parameters": 17237,
+  "blocks": 1,
+  "targets": 640561,
+  "parameter_target_products": 11041349957,
+  "loss": {
+    "dev": {
+      "loss": 1.62446339824092,
+      "perplexity": 5.07569467960429,
+      "targets": 7551,
+      "by_kind": {
+        "decision": {
+          "nll_sum": 11581.008544921875,
+          "targets": 7432,
+          "response_nll_sum": 579.7726516723633,
+          "response_targets": 1208,
+          "useful_response_exact": 0,
+          "rows": 64,
+          "loss": 1.5582627213296387,
+          "perplexity": 4.7505610237233915,
+          "response_loss": 0.4799442480731484
+        },
+        "prose": {
+          "nll_sum": 685.3145751953125,
+          "targets": 119,
+          "response_nll_sum": 479.1501770019531,
+          "response_targets": 84,
+          "useful_response_exact": 0,
+          "rows": 4,
+          "loss": 5.758946010044643,
+          "perplexity": 317.0140231752174,
+          "response_loss": 5.704168773832775
+        }
+      }
+    },
+    "test": {
+      "loss": 1.935851641149329,
+      "perplexity": 6.929943367907694,
+      "targets": 7748,
+      "by_kind": {
+        "decision": {
+          "nll_sum": 14344.06640625,
+          "targets": 7624,
+          "response_nll_sum": 580.7271156311035,
+          "response_targets": 1208,
+          "useful_response_exact": 0,
+          "rows": 64,
+          "loss": 1.8814357825616475,
+          "perplexity": 6.562921028355946,
+          "response_loss": 0.48073436724429097
+        },
+        "prose": {
+          "nll_sum": 654.912109375,
+          "targets": 124,
+          "response_nll_sum": 448.73675537109375,
+          "response_targets": 86,
+          "useful_response_exact": 0,
+          "rows": 4,
+          "loss": 5.281549269153226,
+          "perplexity": 196.67434093096966,
+          "response_loss": 5.21786924850109
+        }
+      }
+    }
+  },
+  "greedy": {
+    "dev": {
+      "rows": 68,
+      "decision_rows": 64,
+      "marker_present": 64,
+      "marker_correct": 64,
+      "supported_rows": 32,
+      "unsupported_rows": 32,
+      "unsafe_confirms": 0,
+      "unsupported_original_request_confirms": 0,
+      "wrong_referent_confirms": 0,
+      "unnecessary_deferrals": 0,
+      "exact_references": 0,
+      "route_correct": 16,
+      "useful_continuation_exact": 0,
+      "length_capped": 2,
+      "supported_first_token_correct": 32,
+      "unsupported_first_token_correct": 32
+    },
+    "test": {
+      "rows": 68,
+      "decision_rows": 64,
+      "marker_present": 64,
+      "marker_correct": 64,
+      "supported_rows": 32,
+      "unsupported_rows": 32,
+      "unsafe_confirms": 0,
+      "unsupported_original_request_confirms": 0,
+      "wrong_referent_confirms": 0,
+      "unnecessary_deferrals": 0,
+      "exact_references": 0,
+      "route_correct": 16,
+      "useful_continuation_exact": 0,
+      "length_capped": 8,
+      "supported_first_token_correct": 32,
+      "unsupported_first_token_correct": 32
+    }
+  },
+  "growth": null,
+  "new_parameter_max_abs_deltas": {},
+  "checkpoint_sha256": "2662420b2f3d720bdf37ea7fee5f647f17d1e1495a020a8ae16b6febcf654d61",
+  "local_results_sha256": "c978272207be69ecef1a3afa8ba275c2cf584644ccc30b9cfe16d1f6af1a0508",
+  "model_sha256": "506f48cf320a8d49c3ba53adb60ca9f3b414cdae973f403ec81b9f077e19023a",
+  "dataset_sha256": "3090fbd5ebabc8b480f2e5ca6e80985d2c39d9e28e749882731fa6cda0bfe115",
+  "source_sha256": {
+    "experiment.py": "0cba7b98fda9504fd56939dd229f1da04002dc640c99b19e2632b6d28f179c78",
+    "model.py": "61ca237e6296ddc79ce02fb457ae62087f9724517ffc1a8d4c8492df09229abf",
+    "data.py": "9d301df4cdb8092520ec05b14b0c437f8afbfa8d5e57a9e39b27f9385a5cd0d3",
+    "interval_model.py": "421f17b442105dea44fa44192f3c87be518a5f85d211b2edb8210c9296cc536a",
+    "interval_data.py": "614b385c7ec9192c6595bc3c16e0d33e32cc89f11a49a5ed05bb641ca1560e33"
+  },
+  "device": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+  "peak_reserved_bytes": 94371840,
+  "wall_seconds": 20.9220000000023,
+  "worker_cumulative_seconds": 65.99999999999636,
+  "ablations": {
+    "new_block_causal_ablation": {
+      "applicable": false
+    }
+  },
+  "predictions_sha256": "8511ebbdf9c72cc29eaeeb73cb6cd3fd5bf5046c763608a9e390c725678ac31a"
+}

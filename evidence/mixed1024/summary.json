@@ -1,0 +1,158 @@
+{
+  "task": "mixed",
+  "arm": "grow",
+  "seed": 12,
+  "step": 1024,
+  "parameters": 38167,
+  "blocks": 1,
+  "targets": 1478849,
+  "parameter_target_products": 56443229783,
+  "loss": {
+    "dev": {
+      "loss": 1.9884486817408367,
+      "perplexity": 7.304193839397516,
+      "targets": 7796,
+      "by_kind": {
+        "decision": {
+          "nll_sum": 14082.7373046875,
+          "targets": 7432,
+          "response_nll_sum": 192.10502243041992,
+          "response_targets": 1208,
+          "useful_response_exact": 45,
+          "rows": 64,
+          "loss": 1.894878539382064,
+          "perplexity": 6.651740431062274,
+          "response_loss": 0.15902733644902312
+        },
+        "prose": {
+          "nll_sum": 1419.2086181640625,
+          "targets": 364,
+          "response_nll_sum": 978.451171875,
+          "response_targets": 249,
+          "useful_response_exact": 0,
+          "rows": 4,
+          "lexical_nll_sum": 1399.70166015625,
+          "continuation_lexical_nll_sum": 958.944091796875,
+          "modeled_utf8_bytes": 553,
+          "continuation_utf8_bytes": 388,
+          "unknown_tokens": 0,
+          "loss": 3.898924775175996,
+          "perplexity": 49.349358912946634,
+          "response_loss": 3.9295227786144578,
+          "bits_per_utf8_byte": 3.651614184143709,
+          "continuation_bits_per_utf8_byte": 3.5656285714565015,
+          "bits_per_byte_definition": "Teacher-forced lexical-token NLL / UTF8 bytes of exact decoded text; excludes BOS/EOS. Mixed task asserts byte-for-byte source and reference reconstruction."
+        }
+      }
+    },
+    "test": {
+      "loss": 2.381343912230651,
+      "perplexity": 10.819433466781557,
+      "targets": 7988,
+      "by_kind": {
+        "decision": {
+          "nll_sum": 17606.451049804688,
+          "targets": 7624,
+          "response_nll_sum": 192.30055809020996,
+          "response_targets": 1208,
+          "useful_response_exact": 45,
+          "rows": 64,
+          "loss": 2.3093456256302054,
+          "perplexity": 10.067834366222122,
+          "response_loss": 0.15918920371706122
+        },
+        "prose": {
+          "nll_sum": 1415.72412109375,
+          "targets": 364,
+          "response_nll_sum": 955.0197143554688,
+          "response_targets": 246,
+          "useful_response_exact": 0,
+          "rows": 4,
+          "lexical_nll_sum": 1396.1331787109375,
+          "continuation_lexical_nll_sum": 935.4288330078125,
+          "modeled_utf8_bytes": 570,
+          "continuation_utf8_bytes": 392,
+          "unknown_tokens": 0,
+          "loss": 3.8893519810267856,
+          "perplexity": 48.87920160858964,
+          "response_loss": 3.8821939607945883,
+          "bits_per_utf8_byte": 3.5336744093803762,
+          "continuation_bits_per_utf8_byte": 3.4427003532778606,
+          "bits_per_byte_definition": "Teacher-forced lexical-token NLL / UTF8 bytes of exact decoded text; excludes BOS/EOS. Mixed task asserts byte-for-byte source and reference reconstruction."
+        }
+      }
+    }
+  },
+  "greedy": {
+    "dev": {
+      "rows": 68,
+      "decision_rows": 64,
+      "marker_present": 64,
+      "marker_correct": 64,
+      "supported_rows": 32,
+      "unsupported_rows": 32,
+      "unsafe_confirms": 0,
+      "unsupported_original_request_confirms": 0,
+      "wrong_referent_confirms": 0,
+      "unnecessary_deferrals": 0,
+      "exact_references": 45,
+      "route_correct": 48,
+      "prose_rows": 4,
+      "prose_rows_with_protocol_tokens": 0,
+      "prose_reached_eos": 0,
+      "useful_continuation_exact": 45,
+      "length_capped": 4,
+      "supported_first_token_correct": 32,
+      "unsupported_first_token_correct": 32
+    },
+    "test": {
+      "rows": 68,
+      "decision_rows": 64,
+      "marker_present": 64,
+      "marker_correct": 64,
+      "supported_rows": 32,
+      "unsupported_rows": 32,
+      "unsafe_confirms": 0,
+      "unsupported_original_request_confirms": 0,
+      "wrong_referent_confirms": 0,
+      "unnecessary_deferrals": 0,
+      "exact_references": 45,
+      "route_correct": 48,
+      "prose_rows": 4,
+      "prose_rows_with_protocol_tokens": 0,
+      "prose_reached_eos": 0,
+      "useful_continuation_exact": 45,
+      "length_capped": 4,
+      "supported_first_token_correct": 32,
+      "unsupported_first_token_correct": 32
+    }
+  },
+  "growth": null,
+  "new_parameter_max_abs_deltas": {},
+  "checkpoint_sha256": "3651a403450da0f2c84f77c6bdb2d551a64f0879be164fec4cb86a88f55a9608",
+  "local_results_sha256": "900bc424dbc7c0295da88d0312adfa3d576f7cebad1a8b364bce930f0e2bccb7",
+  "model_sha256": "bc6e550ae2968ee1da2b4e922287f0b8356829b2e36c5c7db135deb7aa199657",
+  "dataset_sha256": "33b437a96d95c1652f2ad251ee02f3f4a81fa9ef4eac5db0f0167c8661ade668",
+  "source_sha256": {
+    "experiment.py": "dac6b39a28b30335c826b7394027e4424bbfa94bba0877649bca582e8eb07daf",
+    "model.py": "61ca237e6296ddc79ce02fb457ae62087f9724517ffc1a8d4c8492df09229abf",
+    "data.py": "9d301df4cdb8092520ec05b14b0c437f8afbfa8d5e57a9e39b27f9385a5cd0d3",
+    "interval_model.py": "421f17b442105dea44fa44192f3c87be518a5f85d211b2edb8210c9296cc536a",
+    "interval_data.py": "614b385c7ec9192c6595bc3c16e0d33e32cc89f11a49a5ed05bb641ca1560e33",
+    "mixed_data.py": "cf83f2643832c661dacf72e8c40eacba9e14519e6c21bacb91940d4174f75086"
+  },
+  "device": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+  "peak_reserved_bytes": 94371840,
+  "wall_seconds": 30.562999999998283,
+  "worker_cumulative_seconds": 88.50000000000364,
+  "ablations": {
+    "new_block_causal_ablation": {
+      "applicable": false
+    }
+  },
+  "training_targets_by_kind": {
+    "decision": 724562,
+    "prose": 754287
+  },
+  "predictions_sha256": "2dc2350a5d346cfef9c0feeff5f9d35dbf4354c291a106432cc86b169f79ff7b"
+}

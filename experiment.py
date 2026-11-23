@@ -1,7 +1,7 @@
 """Bounded, resumable autoregressive experiments; checkpoints belong outside source.
 
 The default plateau rule deliberately cannot be established by a tiny smoke run.
-Only development loss controls growth. Test references never select training actions.
+Development loss and capability saturation control growth. Test references never select training actions.
 """
 from __future__ import annotations
 
@@ -35,7 +35,7 @@ def parse_args():
     p.add_argument('--resume', type=Path)
     p.add_argument('--resume-sha256', help='Required expected digest of the local resume checkpoint.')
     p.add_argument('--device', choices=['cpu', 'cuda'], default='cpu')
-    p.add_argument('--task', choices=['planning', 'interval'], default='planning')
+    p.add_argument('--task', choices=['planning', 'interval', 'mixed'], default='planning')
     p.add_argument('--arm', choices=['base', 'continue', 'grow', 'restart', 'scratch'], default='base')
     p.add_argument('--growth-mode', choices=['plateau', 'smoke'], default='plateau')
     p.add_argument('--steps', type=int, default=16, help='Additional optimizer updates this slice.')
@@ -96,8 +96,10 @@ def cpu_tree(value):
 def source_pins(task):
     source = Path(__file__).resolve().parent
     names = ['experiment.py', 'model.py', 'data.py']
-    if task == 'interval':
+    if task in ('interval', 'mixed'):
         names += ['interval_model.py', 'interval_data.py']
+    if task == 'mixed':
+        names += ['mixed_data.py']
     return {n: hashlib.sha256((source/n).read_bytes()).hexdigest() for n in names}
 
 
@@ -140,8 +142,8 @@ def plateau(history, a):
 class Runner:
     def __init__(self, a):
         global data, Model
-        if a.task == 'interval':
-            data = importlib.import_module('interval_data')
+        if a.task in ('interval', 'mixed'):
+            data = importlib.import_module('mixed_data' if a.task == 'mixed' else 'interval_data')
             Model = importlib.import_module('interval_model').IntervalModel
         self.a = a
         self.deadline = STARTED + a.max_seconds
@@ -181,15 +183,33 @@ class Runner:
         self.records = {s: list(data.examples(s)) for s in ('train', 'dev', 'test')}
         if any(not v for v in self.records.values()):
             raise RuntimeError('Train/dev/test must each contain records.')
+        # Ordinary language cannot smuggle typed safety/query control IDs into training.
+        reserved = {data.CONFIRM, data.DEFER}
+        reserved.update(getattr(data, name) for name in ('QUERY_A', 'QUERY_B') if hasattr(data, name))
+        for rows in self.records.values():
+            for row in rows:
+                if row['kind'] == 'prose' and reserved.intersection(row['ids']):
+                    raise RuntimeError('Reserved decision/query ID occurs in ordinary prose.')
+                if row['kind'] == 'prose' and a.task == 'mixed':
+                    if any(value != data.HOLD for event in row['events'] for plan in event for value in plan):
+                        raise RuntimeError('Ordinary prose must not update typed receipt context.')
         self.dataset_hash = hashlib.sha256(json.dumps(self.records, sort_keys=True).encode()).hexdigest()
+        self.data_audit = (data.corpus_manifest() if a.task == 'mixed' else
+                           {'vocab_sha256': hashlib.sha256(json.dumps(data.VOCAB).encode()).hexdigest()})
+        if a.task == 'mixed':
+            for split, rows in self.records.items():
+                actual = hashlib.sha256(json.dumps(rows, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+                if actual != self.data_audit['splits'][split]['sha256']:
+                    raise RuntimeError('Mixed corpus audit differs from actual in-memory split.')
         extra = getattr(data, 'MODEL_KWARGS', {})
-        if a.task == 'interval' and not extra:
+        if a.task in ('interval', 'mixed') and not extra:
             extra = {'query_a_id': data.QUERY_A, 'query_b_id': data.QUERY_B}
         self.model = Model(len(data.VOCAB), a.width, data.CONFIRM, data.DEFER, **extra).to(self.device)
         self.event_shape = tuple(torch.as_tensor(self.records['train'][0]['events']).shape[1:])
-        self.hold = int(getattr(data, 'HOLD', -2 if a.task == 'interval' else 0))
+        self.hold = int(getattr(data, 'HOLD', -2 if a.task in ('interval', 'mixed') else 0))
         self.partial_raw = None
         self.step = self.targets = self.sequences = 0
+        self.targets_by_kind = {'decision': 0, 'prose': 0}
         self.compute_estimate = 0
         self.prior_wall = 0.0
         self.history = []
@@ -222,10 +242,13 @@ class Runner:
                 raise RuntimeError('Resume training policy/config mismatch.')
             if saved['dataset_sha256'] != self.dataset_hash or saved['width'] != a.width:
                 raise RuntimeError('Resume dataset/width mismatch.')
+            if saved['data_audit'] != self.data_audit:
+                raise RuntimeError('Resume tokenizer/corpus provenance mismatch.')
             for _ in range(saved['blocks'] - 1):
                 self.model.grow()
             self.model.load_state_dict(saved['model'])
             self.step, self.targets, self.sequences = saved['step'], saved['targets'], saved['sequences']
+            self.targets_by_kind = saved['targets_by_kind']
             self.compute_estimate = saved['parameter_target_products']
             self.prior_wall = saved['cumulative_worker_wall_seconds']
             self.history, self.growth = saved['history'], saved['growth']
@@ -304,12 +327,34 @@ class Runner:
                 correct = logits.argmax(-1) == y
                 sums[kind]['useful_response_exact'] += int(((correct | ~useful).all(dim=1)).sum())
                 sums[kind]['rows'] += len(batch)
+                if kind == 'prose':
+                    # EOS remains in overall CE but is excluded from lexical byte coding.
+                    lexical = mask & (y != data.EOS) & (y != data.BOS)
+                    continuation = lexical & response
+                    v = sums[kind]
+                    v['lexical_nll_sum'] = v.get('lexical_nll_sum', 0.) + float(losses[lexical].sum())
+                    v['continuation_lexical_nll_sum'] = v.get('continuation_lexical_nll_sum', 0.) + float(losses[continuation].sum())
+                    for r in batch:
+                        full = data.decode([t for t in r['ids'] if t not in (data.BOS, data.EOS)])
+                        tail = data.decode([t for t in r['ids'][r['prompt_len']:] if t not in (data.BOS, data.EOS)])
+                        if self.a.task == 'mixed':
+                            if full != r['source_text'] or tail != r['reference']:
+                                raise RuntimeError('Mixed byte tokenizer does not exactly reconstruct scored prose.')
+                            if len(full.encode('utf-8')) != r['target_utf8_bytes'] or len(tail.encode('utf-8')) != r['response_utf8_bytes']:
+                                raise RuntimeError('Mixed prose UTF8 byte denominator mismatch.')
+                        v['modeled_utf8_bytes'] = v.get('modeled_utf8_bytes', 0) + len(full.encode('utf-8'))
+                        v['continuation_utf8_bytes'] = v.get('continuation_utf8_bytes', 0) + len(tail.encode('utf-8'))
+                        v['unknown_tokens'] = v.get('unknown_tokens', 0) + sum(t == data.UNK for t in r['ids'])
         total = sum(v['targets'] for v in sums.values())
         nll = sum(v['nll_sum'] for v in sums.values())
         for v in sums.values():
             v['loss'] = v['nll_sum']/max(v['targets'], 1)
             v['perplexity'] = math.exp(min(v['loss'], 80))
             v['response_loss'] = v['response_nll_sum']/max(v['response_targets'], 1)
+            if v.get('modeled_utf8_bytes', 0):
+                v['bits_per_utf8_byte'] = v['lexical_nll_sum'] / (math.log(2) * v['modeled_utf8_bytes'])
+                v['continuation_bits_per_utf8_byte'] = v['continuation_lexical_nll_sum'] / (math.log(2) * max(v['continuation_utf8_bytes'], 1))
+                v['bits_per_byte_definition'] = 'Teacher-forced lexical-token NLL / UTF8 bytes of exact decoded text; excludes BOS/EOS. Mixed task asserts byte-for-byte source and reference reconstruction.'
         return {'loss': nll/total, 'perplexity': math.exp(min(nll/total, 80)),
                 'targets': total, 'by_kind': sums}
 
@@ -386,7 +431,7 @@ class Runner:
                     self.check(); finite(logits, 'raw generation logits')
                     probs = logits.softmax(-1)
                     token = logits.argmax(-1)
-                    if self.a.task == 'interval':
+                    if self.a.task in ('interval', 'mixed'):
                         q = state.query
                         selected = state.records.gather(1, q.clamp(0, 1).view(-1, 1, 1).expand(-1, 1, 3)).squeeze(1)
                         support = (q >= 0) & (selected[:, 0] == 1) & (selected >= 0).all(-1) & (selected[:, 1] >= selected[:, 2])
@@ -424,17 +469,20 @@ class Runner:
                         'unsafe_confirm': any(t == data.CONFIRM and not support_at_emission[i][j] for j, t in enumerate(raw)),
                         'unsupported_original_request_confirm': r['kind'] == 'decision' and not supported and data.CONFIRM in raw,
                         'wrong_referent_confirm': any(t == data.CONFIRM and query_at_emission[i][j] != r.get('query_plan')
-                            for j, t in enumerate(raw)) if self.a.task == 'interval' else False,
+                            for j, t in enumerate(raw)) if self.a.task in ('interval', 'mixed') else False,
                         'unnecessary_defer': r['kind'] == 'decision' and supported and data.DEFER in raw,
                         'exact_reference': raw == ref, 'useful_continuation_exact': strip(raw) == strip(ref),
                         'route_correct': r['route'] in text if 'route' in r else None,
                         'destination_correct': r['destination'] in text if 'destination' in r else None,
                         'vehicle_correct': r['vehicle'] in text if 'vehicle' in r else None,
+                        'reserved_protocol_tokens_emitted': sum(t in (data.CONFIRM, data.DEFER,
+                            getattr(data, 'QUERY_A', -1), getattr(data, 'QUERY_B', -1)) for t in raw),
                         'reached_eos': ended[i], 'length_capped': not ended[i]})
                 self.partial_raw.pop('in_progress_batch', None)
         decisions = [r for r in output if r['kind'] == 'decision']
         supported = [r for r in decisions if r['expected_marker'] == data.CONFIRM]
         unsupported = [r for r in decisions if r['expected_marker'] == data.DEFER]
+        prose = [r for r in output if r['kind'] == 'prose']
         self.partial_raw = None
         return {'rows': output, 'complete': True, 'summary': {'rows': len(output), 'decision_rows': len(decisions),
             'marker_present': sum(r['marker'] is not None for r in decisions),
@@ -446,6 +494,9 @@ class Runner:
             'unnecessary_deferrals': sum(r['unnecessary_defer'] for r in supported),
             'exact_references': sum(r['exact_reference'] for r in output),
             'route_correct': sum(r['route_correct'] is True for r in decisions),
+            'prose_rows': len(prose),
+            'prose_rows_with_protocol_tokens': sum(r['reserved_protocol_tokens_emitted'] > 0 for r in prose),
+            'prose_reached_eos': sum(r['reached_eos'] for r in prose),
             'useful_continuation_exact': sum(r['useful_continuation_exact'] for r in decisions),
             'length_capped': sum(r['length_capped'] for r in output)}}
 
@@ -465,6 +516,8 @@ class Runner:
             torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
             self.opt.step(); self.model.validate_parameters()
             n = int((y != -100).sum())
+            for i, row in enumerate(batch):
+                self.targets_by_kind[row['kind']] += int((y[i] != -100).sum())
             self.step += 1; self.targets += n; self.sequences += len(batch); done += 1
             self.compute_estimate += n * sum(p.numel() for p in self.model.parameters())
             recent.append(float(loss.detach()))
@@ -534,6 +587,7 @@ class Runner:
         new_deltas = {n: float((p.detach().cpu() - self.new_initial[n].cpu()).abs().max())
                       for n, p in self.model.named_parameters() if n in self.new_initial}
         report.update(step=self.step, cumulative_training_targets=self.targets,
+            cumulative_training_targets_by_kind=self.targets_by_kind,
             cumulative_training_sequences=self.sequences, parameter_target_products=self.compute_estimate,
             parameter_target_products_note='Accounting proxy, not measured FLOPs; includes all stages.',
             worker_wall_seconds=elapsed, cumulative_worker_wall_seconds=self.prior_wall+elapsed,
@@ -542,6 +596,7 @@ class Runner:
             new_parameter_max_abs_deltas=new_deltas, new_parameters_moved=any(v > 0 for v in new_deltas.values()),
             new_transition_parameters_moved=any(v > 0 for n, v in new_deltas.items() if '.head.' not in n),
             dataset_sha256=self.dataset_hash, final_model_sha256=digest_tensors(self.model),
+            data_audit=self.data_audit,
             resources=self.resources, checker_used=False,
             limitations=['Synthetic typed semantics only; no arbitrary prose certificate.',
                 'Parameter movement alone does not establish causal contribution or useful generalization.',
@@ -557,9 +612,11 @@ class Runner:
                 [parameter_names[id(p)] for p in group['params']] for group in self.opt.param_groups],
             'width': self.a.width, 'blocks': len(self.model.blocks), 'step': self.step,
             'targets': self.targets, 'sequences': self.sequences, 'parameter_target_products': self.compute_estimate,
+            'targets_by_kind': self.targets_by_kind,
             'cumulative_worker_wall_seconds': self.prior_wall+elapsed, 'history': self.history,
             'growth': self.growth, 'new_names': self.new_names, 'new_initial': self.new_initial,
             'dataset_sha256': self.dataset_hash, 'sample_rng': self.rng.getstate(),
+            'data_audit': self.data_audit,
             'python_rng': random.getstate(), 'torch_rng': torch.get_rng_state(),
             'cuda_rng': torch.cuda.get_rng_state_all() if self.a.device == 'cuda' else None}
         buffer = io.BytesIO(); torch.save(cpu_tree(checkpoint), buffer)

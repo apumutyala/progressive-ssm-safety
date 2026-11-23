@@ -1,0 +1,30 @@
+{
+  "config": {
+    "resume_sha256": "2bdd69e824c0acdf194f1aba8f847d2924d6ae94eba9b9d141c9bc9e4e2b572f",
+    "device": "cuda",
+    "task": "interval",
+    "arm": "continue",
+    "growth_mode": "plateau",
+    "steps": 256,
+    "width": 16,
+    "seed": 12,
+    "batch_size": 12,
+    "lr": 0.003,
+    "eval_every": 64,
+    "max_new_tokens": 24,
+    "max_seconds": 100.0,
+    "plateau_min_step": 1000,
+    "plateau_observations": 5,
+    "plateau_relative_improvement": 0.01,
+    "threads": 1,
+    "expected_torch": "2.14.1+cu130",
+    "expected_gpu": "RTX 5070 Ti Laptop GPU"
+  },
+  "supervisor": {
+    "exit_code": 0,
+    "stop_reason": null,
+    "seconds": 30.187999999998283,
+    "peak_worker_private_bytes": 2879778816,
+    "artifact_bytes": 1201895
+  }
+}

@@ -1,0 +1,5 @@
+# Source digests are part of checkpoint admission. Preserve the exact bytes
+# on Windows and on other hosts, including the historical mixed line endings.
+*.py -text
+*.json -text
+*.jsonl -text

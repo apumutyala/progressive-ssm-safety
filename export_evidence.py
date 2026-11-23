@@ -30,7 +30,7 @@ def export(run, destination):
     if supervisor["exit_code"] or supervisor["stop_reason"] or r["status"] != "complete":
         raise ValueError("Exporter requires a complete observed run")
     stage = r["config"]
-    if stage["task"] not in {"planning","interval"}:
+    if stage["task"] not in {"planning","interval","mixed"}:
         raise ValueError("Expected the included synthetic study")
     rows = []
     checks = {}
@@ -40,6 +40,14 @@ def export(run, destination):
             raise ValueError(f"Incomplete {split} evaluation")
         checks[split] = dict(raw["summary"])
         decisions = [x for x in raw["rows"] if x["kind"] == "decision"]
+        if stage["task"] == "mixed":
+            # These two splits consist exclusively of authored fixtures and
+            # authored prose. Never load or publish private training passages.
+            import mixed_data
+            approved = {x["id"]:(x["prompt"],x["reference"]) for x in mixed_data.examples(split)}
+            observed = {x["id"]:(x["prompt"],x["reference"]) for x in raw["rows"]}
+            if approved != observed or len(raw["rows"]) != len(approved):
+                raise ValueError("Exported rows must exactly match authored evaluation split")
         for support, group in ((True, "supported"), (False, "unsupported")):
             subset = [x for x in decisions if x["semantically_supported"] == support]
             checks[split][group+"_first_token_correct"] = sum(x["raw_ids"][:1] == [x["expected_marker"]] for x in subset)
@@ -59,6 +67,8 @@ def export(run, destination):
                    peak_reserved_bytes=resource["cuda_peak_reserved_bytes"], wall_seconds=supervisor["seconds"],
                    worker_cumulative_seconds=r["cumulative_worker_wall_seconds"],
                    ablations={k:v for k,v in r.items() if "ablation" in k})
+    if stage["task"] == "mixed":
+        summary["training_targets_by_kind"] = r["cumulative_training_targets_by_kind"]
     directory = destination / run.name
     directory.mkdir(parents=True, exist_ok=True)
     payload = "".join(json.dumps(x, separators=(",",":"), allow_nan=False)+"\n" for x in rows).encode()

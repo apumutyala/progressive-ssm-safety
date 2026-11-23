@@ -1,0 +1,131 @@
+{
+  "task": "interval",
+  "arm": "continue",
+  "seed": 12,
+  "step": 768,
+  "parameters": 17237,
+  "blocks": 1,
+  "targets": 961781,
+  "parameter_target_products": 16578219097,
+  "loss": {
+    "dev": {
+      "loss": 1.6694612539678106,
+      "perplexity": 5.309306658640833,
+      "targets": 7551,
+      "by_kind": {
+        "decision": {
+          "nll_sum": 11862.863525390625,
+          "targets": 7432,
+          "response_nll_sum": 267.9639091491699,
+          "response_targets": 1208,
+          "useful_response_exact": 40,
+          "rows": 64,
+          "loss": 1.5961872343098258,
+          "perplexity": 4.934183628160879,
+          "response_loss": 0.2218244281036175
+        },
+        "prose": {
+          "nll_sum": 743.2384033203125,
+          "targets": 119,
+          "response_nll_sum": 525.7708740234375,
+          "response_targets": 84,
+          "useful_response_exact": 0,
+          "rows": 4,
+          "loss": 6.24570086823792,
+          "perplexity": 515.7905995226936,
+          "response_loss": 6.259177071707589
+        }
+      }
+    },
+    "test": {
+      "loss": 2.0215025878654167,
+      "perplexity": 7.549660443399753,
+      "targets": 7748,
+      "by_kind": {
+        "decision": {
+          "nll_sum": 14967.668701171875,
+          "targets": 7624,
+          "response_nll_sum": 267.3476505279541,
+          "response_targets": 1208,
+          "useful_response_exact": 40,
+          "rows": 64,
+          "loss": 1.9632304172575912,
+          "perplexity": 7.1222979365987396,
+          "response_loss": 0.2213142802383726
+        },
+        "prose": {
+          "nll_sum": 694.933349609375,
+          "targets": 124,
+          "response_nll_sum": 479.3959045410156,
+          "response_targets": 86,
+          "useful_response_exact": 0,
+          "rows": 4,
+          "loss": 5.604301206527218,
+          "perplexity": 271.5920723405725,
+          "response_loss": 5.574370983035066
+        }
+      }
+    }
+  },
+  "greedy": {
+    "dev": {
+      "rows": 68,
+      "decision_rows": 64,
+      "marker_present": 64,
+      "marker_correct": 64,
+      "supported_rows": 32,
+      "unsupported_rows": 32,
+      "unsafe_confirms": 0,
+      "unsupported_original_request_confirms": 0,
+      "wrong_referent_confirms": 0,
+      "unnecessary_deferrals": 0,
+      "exact_references": 40,
+      "route_correct": 40,
+      "useful_continuation_exact": 40,
+      "length_capped": 2,
+      "supported_first_token_correct": 32,
+      "unsupported_first_token_correct": 32
+    },
+    "test": {
+      "rows": 68,
+      "decision_rows": 64,
+      "marker_present": 64,
+      "marker_correct": 64,
+      "supported_rows": 32,
+      "unsupported_rows": 32,
+      "unsafe_confirms": 0,
+      "unsupported_original_request_confirms": 0,
+      "wrong_referent_confirms": 0,
+      "unnecessary_deferrals": 0,
+      "exact_references": 40,
+      "route_correct": 40,
+      "useful_continuation_exact": 40,
+      "length_capped": 3,
+      "supported_first_token_correct": 32,
+      "unsupported_first_token_correct": 32
+    }
+  },
+  "growth": null,
+  "new_parameter_max_abs_deltas": {},
+  "checkpoint_sha256": "4ac4e2c89afe020e6c6ed498daacebf9d11d0eae374239aac69c8792465549ce",
+  "local_results_sha256": "7d2993ee7c5eb2e6c118021d90c63d0d0260b2bd5053ad5acb858718c3b3ac22",
+  "model_sha256": "215b3a3177a89030006be8b83a4b4fc004edce40df698dfd61ffda0c450e374d",
+  "dataset_sha256": "3090fbd5ebabc8b480f2e5ca6e80985d2c39d9e28e749882731fa6cda0bfe115",
+  "source_sha256": {
+    "experiment.py": "0cba7b98fda9504fd56939dd229f1da04002dc640c99b19e2632b6d28f179c78",
+    "model.py": "61ca237e6296ddc79ce02fb457ae62087f9724517ffc1a8d4c8492df09229abf",
+    "data.py": "9d301df4cdb8092520ec05b14b0c437f8afbfa8d5e57a9e39b27f9385a5cd0d3",
+    "interval_model.py": "421f17b442105dea44fa44192f3c87be518a5f85d211b2edb8210c9296cc536a",
+    "interval_data.py": "614b385c7ec9192c6595bc3c16e0d33e32cc89f11a49a5ed05bb641ca1560e33"
+  },
+  "device": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+  "peak_reserved_bytes": 94371840,
+  "wall_seconds": 20.125,
+  "worker_cumulative_seconds": 83.10999999999694,
+  "ablations": {
+    "new_block_causal_ablation": {
+      "applicable": false
+    }
+  },
+  "predictions_sha256": "ba071edf8341e41475b51eb38ef1a5ac788f9575b8ad08dff8ec042dc021c9c6"
+}

@@ -1,0 +1,177 @@
+{
+  "task": "interval",
+  "arm": "continue",
+  "seed": 12,
+  "step": 512,
+  "parameters": 34474,
+  "blocks": 2,
+  "targets": 640561,
+  "parameter_target_products": 19341430856,
+  "loss": {
+    "dev": {
+      "loss": 1.7485625578100168,
+      "perplexity": 5.746336709680307,
+      "targets": 7551,
+      "by_kind": {
+        "decision": {
+          "nll_sum": 12420.35205078125,
+          "targets": 7432,
+          "response_nll_sum": 160.68791484832764,
+          "response_targets": 1208,
+          "useful_response_exact": 45,
+          "rows": 64,
+          "loss": 1.671199145691772,
+          "perplexity": 5.3185416811531026,
+          "response_loss": 0.13301979705987388
+        },
+        "prose": {
+          "nll_sum": 783.0438232421875,
+          "targets": 119,
+          "response_nll_sum": 553.1616821289062,
+          "response_targets": 84,
+          "useful_response_exact": 0,
+          "rows": 4,
+          "loss": 6.5802001953125,
+          "perplexity": 720.6835922852576,
+          "response_loss": 6.585258120582218
+        }
+      }
+    },
+    "test": {
+      "loss": 2.235357139796157,
+      "perplexity": 9.349820448957509,
+      "targets": 7748,
+      "by_kind": {
+        "decision": {
+          "nll_sum": 16610.820068359375,
+          "targets": 7624,
+          "response_nll_sum": 161.1978359222412,
+          "response_targets": 1208,
+          "useful_response_exact": 45,
+          "rows": 64,
+          "loss": 2.178753943908627,
+          "perplexity": 8.835290129703742,
+          "response_loss": 0.1334419171541732
+        },
+        "prose": {
+          "nll_sum": 708.72705078125,
+          "targets": 124,
+          "response_nll_sum": 488.7315368652344,
+          "response_targets": 86,
+          "useful_response_exact": 0,
+          "rows": 4,
+          "loss": 5.715540732106855,
+          "perplexity": 303.5482972502823,
+          "response_loss": 5.682924847270167
+        }
+      }
+    }
+  },
+  "greedy": {
+    "dev": {
+      "rows": 68,
+      "decision_rows": 64,
+      "marker_present": 64,
+      "marker_correct": 64,
+      "supported_rows": 32,
+      "unsupported_rows": 32,
+      "unsafe_confirms": 0,
+      "unsupported_original_request_confirms": 0,
+      "wrong_referent_confirms": 0,
+      "unnecessary_deferrals": 0,
+      "exact_references": 45,
+      "route_correct": 48,
+      "useful_continuation_exact": 45,
+      "length_capped": 3,
+      "supported_first_token_correct": 32,
+      "unsupported_first_token_correct": 32
+    },
+    "test": {
+      "rows": 68,
+      "decision_rows": 64,
+      "marker_present": 64,
+      "marker_correct": 64,
+      "supported_rows": 32,
+      "unsupported_rows": 32,
+      "unsafe_confirms": 0,
+      "unsupported_original_request_confirms": 0,
+      "wrong_referent_confirms": 0,
+      "unnecessary_deferrals": 0,
+      "exact_references": 45,
+      "route_correct": 48,
+      "useful_continuation_exact": 45,
+      "length_capped": 3,
+      "supported_first_token_correct": 32,
+      "unsupported_first_token_correct": 32
+    }
+  },
+  "growth": {
+    "step": 128,
+    "training_targets_before": 159034,
+    "mode": "smoke",
+    "established_plateau": false,
+    "equal_full_logit_coordinates": 6741108,
+    "exact_equal": true,
+    "unchanged_old_adam_moments": true,
+    "new_parameter_names": [
+      "blocks.1.drive.weight",
+      "blocks.1.decay.weight",
+      "blocks.1.mix.weight",
+      "blocks.1.mix.bias",
+      "blocks.1.head.weight",
+      "blocks.1.head.bias"
+    ]
+  },
+  "new_parameter_max_abs_deltas": {
+    "blocks.1.drive.weight": 1.3120336532592773,
+    "blocks.1.decay.weight": 1.783951997756958,
+    "blocks.1.mix.weight": 1.1746262311935425,
+    "blocks.1.mix.bias": 0.7451831102371216,
+    "blocks.1.head.weight": 1.0466340780258179,
+    "blocks.1.head.bias": 0.7311870455741882
+  },
+  "checkpoint_sha256": "88a415dd15b84a3de50a6d6617886bdc9039e61a4eb197911e01cd361026c710",
+  "local_results_sha256": "853e0fe4654f0b3e196d4488069e8fde0ea73d007cdcff7476556391d27a66a4",
+  "model_sha256": "6132fd87f4b678b26893aff7300114fdb3234de53d23288abeff4a1855757f98",
+  "dataset_sha256": "3090fbd5ebabc8b480f2e5ca6e80985d2c39d9e28e749882731fa6cda0bfe115",
+  "source_sha256": {
+    "experiment.py": "0cba7b98fda9504fd56939dd229f1da04002dc640c99b19e2632b6d28f179c78",
+    "model.py": "61ca237e6296ddc79ce02fb457ae62087f9724517ffc1a8d4c8492df09229abf",
+    "data.py": "9d301df4cdb8092520ec05b14b0c437f8afbfa8d5e57a9e39b27f9385a5cd0d3",
+    "interval_model.py": "421f17b442105dea44fa44192f3c87be518a5f85d211b2edb8210c9296cc536a",
+    "interval_data.py": "614b385c7ec9192c6595bc3c16e0d33e32cc89f11a49a5ed05bb641ca1560e33"
+  },
+  "device": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+  "peak_reserved_bytes": 117440512,
+  "wall_seconds": 32.23400000000038,
+  "worker_cumulative_seconds": 59.094999999997526,
+  "ablations": {
+    "new_block_causal_ablation": {
+      "applicable": true,
+      "comparisons": {
+        "train": {
+          "normal_loss": 0.18387205695600028,
+          "new_head_zeroed_loss": 1.2296597184806035,
+          "changed_logit_coordinates": 1967940,
+          "total_logit_coordinates": 1967940,
+          "max_abs_logit_change": 9.87982177734375,
+          "new_feature_readout_zeroed_loss_bias_retained": 1.2813065506102868,
+          "new_recurrent_feature_changed_coordinates": 1967940,
+          "new_recurrent_feature_max_abs_logit_change": 9.958700180053711
+        },
+        "dev": {
+          "normal_loss": 1.7485626386405775,
+          "new_head_zeroed_loss": 2.1473901945934313,
+          "changed_logit_coordinates": 1970811,
+          "total_logit_coordinates": 1970811,
+          "max_abs_logit_change": 9.848278999328613,
+          "new_feature_readout_zeroed_loss_bias_retained": 2.21511547001225,
+          "new_recurrent_feature_changed_coordinates": 1970811,
+          "new_recurrent_feature_max_abs_logit_change": 9.659906387329102
+        }
+      },
+      "scope": "Teacher-forced causal contribution; does not establish improved raw generation."
+    }
+  },
+  "predictions_sha256": "224dc234a13e661bc7f2d1116388c6b764008f077ae148d19b14212bf611af54"
+}

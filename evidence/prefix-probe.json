@@ -1,0 +1,207 @@
+{
+  "checkpoint_sha256": "15bd11f0bcc6ad4059f48aff93de16f2774bd454d9b9af4f9abbfa189e348c6a",
+  "reports": [
+    {
+      "schema": 1,
+      "certified_prior_learned_state_independent_final_logits": false,
+      "reason": "Inconclusive: at least one learned hidden interval has not coalesced exactly.",
+      "backend": "cpu",
+      "torch": "2.14.1+cu130",
+      "threads": 1,
+      "deterministic_algorithms_enabled": true,
+      "float32_matmul_precision": "highest",
+      "model_source_sha256": "61ca237e6296ddc79ce02fb457ae62087f9724517ffc1a8d4c8492df09229abf",
+      "verifier_source_sha256": "e6b101d31a40e787eb23674bd3f5d3be4b7329679c6e74b269bdb9292baffd0a",
+      "model_parameter_sha256": "54f69b79eeec94413591bd92845cc84651569cec698af8091c78925b1c36eb7b",
+      "batch_shape": [
+        1,
+        8
+      ],
+      "suffix_ids": [
+        [
+          176,
+          24,
+          108,
+          234,
+          111,
+          58,
+          62,
+          8
+        ]
+      ],
+      "ordinary_suffix_excludes_model_decision_and_query_ids": true,
+      "protected_premises": [
+        [
+          [
+            false,
+            false
+          ],
+          [
+            false,
+            false
+          ],
+          [
+            false,
+            false
+          ],
+          [
+            false,
+            false
+          ],
+          [
+            false,
+            false
+          ],
+          [
+            false,
+            false
+          ],
+          [
+            false,
+            false
+          ],
+          [
+            false,
+            false
+          ]
+        ]
+      ],
+      "blocks": [
+        {
+          "block": 0,
+          "coordinates": 16,
+          "equal_bit_coordinates": 0,
+          "unequal_bit_coordinates": 16,
+          "numerically_coalesced_coordinates": 0,
+          "zero_singleton_coordinates": 0,
+          "signed_zero_disagreements": 0,
+          "max_final_hidden_width": 1.858303427696228,
+          "coalesced_nonzero_everywhere": false
+        },
+        {
+          "block": 1,
+          "coordinates": 16,
+          "equal_bit_coordinates": 0,
+          "unequal_bit_coordinates": 16,
+          "numerically_coalesced_coordinates": 0,
+          "zero_singleton_coordinates": 0,
+          "signed_zero_disagreements": 0,
+          "max_final_hidden_width": 1.7508958578109741,
+          "coalesced_nonzero_everywhere": false
+        }
+      ],
+      "max_final_hidden_width": 1.858303427696228,
+      "endpoint_final_logits_equal_bits": false,
+      "endpoint_final_logits_max_abs_difference": 9.581717848777771,
+      "scope": "Final next-token full vocabulary logits only; fixed suffix and identical protected premises.",
+      "assumptions": [
+        "Existing diagonal transition; all prior learned states in [-1,1].",
+        "Conventional monotone FP32 rounding, no NaNs/faults, deterministic row-local kernels.",
+        "Same fixed model, batch/sequence shape, eager math path and CPU backend.",
+        "No claim about unknown protected context, token meaning, or semantic safety."
+      ],
+      "suffix_text": "plan a goes to harbor by cart ."
+    },
+    {
+      "schema": 1,
+      "certified_prior_learned_state_independent_final_logits": false,
+      "reason": "Inconclusive: at least one learned hidden interval has not coalesced exactly.",
+      "backend": "cpu",
+      "torch": "2.14.1+cu130",
+      "threads": 1,
+      "deterministic_algorithms_enabled": true,
+      "float32_matmul_precision": "highest",
+      "model_source_sha256": "61ca237e6296ddc79ce02fb457ae62087f9724517ffc1a8d4c8492df09229abf",
+      "verifier_source_sha256": "e6b101d31a40e787eb23674bd3f5d3be4b7329679c6e74b269bdb9292baffd0a",
+      "model_parameter_sha256": "54f69b79eeec94413591bd92845cc84651569cec698af8091c78925b1c36eb7b",
+      "batch_shape": [
+        1,
+        8
+      ],
+      "suffix_ids": [
+        [
+          176,
+          35,
+          108,
+          234,
+          105,
+          58,
+          45,
+          8
+        ]
+      ],
+      "ordinary_suffix_excludes_model_decision_and_query_ids": true,
+      "protected_premises": [
+        [
+          [
+            false,
+            false
+          ],
+          [
+            false,
+            false
+          ],
+          [
+            false,
+            false
+          ],
+          [
+            false,
+            false
+          ],
+          [
+            false,
+            false
+          ],
+          [
+            false,
+            false
+          ],
+          [
+            false,
+            false
+          ],
+          [
+            false,
+            false
+          ]
+        ]
+      ],
+      "blocks": [
+        {
+          "block": 0,
+          "coordinates": 16,
+          "equal_bit_coordinates": 0,
+          "unequal_bit_coordinates": 16,
+          "numerically_coalesced_coordinates": 0,
+          "zero_singleton_coordinates": 0,
+          "signed_zero_disagreements": 0,
+          "max_final_hidden_width": 1.8547500371932983,
+          "coalesced_nonzero_everywhere": false
+        },
+        {
+          "block": 1,
+          "coordinates": 16,
+          "equal_bit_coordinates": 0,
+          "unequal_bit_coordinates": 16,
+          "numerically_coalesced_coordinates": 0,
+          "zero_singleton_coordinates": 0,
+          "signed_zero_disagreements": 0,
+          "max_final_hidden_width": 1.7819101214408875,
+          "coalesced_nonzero_everywhere": false
+        }
+      ],
+      "max_final_hidden_width": 1.8547500371932983,
+      "endpoint_final_logits_equal_bits": false,
+      "endpoint_final_logits_max_abs_difference": 12.156415939331055,
+      "scope": "Final next-token full vocabulary logits only; fixed suffix and identical protected premises.",
+      "assumptions": [
+        "Existing diagonal transition; all prior learned states in [-1,1].",
+        "Conventional monotone FP32 rounding, no NaNs/faults, deterministic row-local kernels.",
+        "Same fixed model, batch/sequence shape, eager math path and CPU backend.",
+        "No claim about unknown protected context, token meaning, or semantic safety."
+      ],
+      "suffix_text": "plan b goes to garden by boat ."
+    }
+  ]
+}

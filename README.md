@@ -31,3 +31,15 @@ New-Item -ItemType Directory -Path $campaign -Force | Out-Null
 ~~~
 
 Use `experiment.py --help` for controls and resume arguments. Each resume consumes a matching source, configuration and SHA-256-pinned local checkpoint. Use new output and receipt paths for each run. Complete local artifacts include the learned weights, optimizer state, runtime measurements and per-example outputs. Only selected reproducible source and sanitized evidence belong in Git. The open research questions and prior work are in [RESEARCH.md](RESEARCH.md).
+
+## Try an ordinary prompt
+
+The mixed training arm uses a local train-only prose pack. See [MIXED_DATA.md](MIXED_DATA.md) for its identity, data budget and encoding. The repository includes the synthetic program and evaluation fixtures; the external training corpus and Omen checkpoints stay on the device. Inference needs a matching checkpoint and can use the embedded byte codec without the training pack. The model is a research language model trained from scratch. Its current free-text output is not coherent enough for a chat assistant.
+
+From the project directory, set `$checkpoint` to a locally generated mixed checkpoint path and `$sha` to the exact digest in its adjacent manifest. Then run:
+
+~~~powershell
+& $env:PY312 -I -S -B launch.py --site $env:TORCH_SITE --mode generate --receipt "$campaign/prompt-receipt.json" -- --checkpoint $checkpoint --sha256 $sha --task mixed --device cpu --output "$campaign/prompt-result" --prompt "The garden was quiet in the morning." --max-new-tokens 32
+~~~
+
+For a scenario with verified primitive receipts, replace the prompt argument with `--case-id test-interval-0-equality-qa`. Source snapshots are part of checkpoint compatibility. Use commit `63b383962633f5c68e7ccc1926f763cc234e6a65` to resume the original interval-only comparison. The current checkout handles mixed training and ordinary prompt inference.
