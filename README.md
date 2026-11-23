@@ -4,11 +4,14 @@ This branch trains an autoregressive state-space language model from random init
 
 The central question is whether an architecture can learn to predict language while retaining a property proved over **every admitted set of weights**. The first property concerns the hidden state throughout ordinary prose. The second concerns a reserved decision token when the input contains authenticated facts. Neither establishes the truth or safety of arbitrary generated English.
 
+**First GPU result.** The model's development loss fell from 5.60 to 3.04 nats per byte over 128 updates. Its trained hidden states respected the proved box. The comparison model crossed the boundary and attained slightly better final test loss. Both models had zero accepted English answers on six downstream prompts. Doubling the parameter count preserved the original logits on the tested inputs. [Results and scope](CORPUS_RESULTS.md)
+
 ## Where to start
 
 - [Smoke protocol](SMOKE_PROTOCOL.md) describes the corpus-first comparison, checkpoint-resume test and held-out evaluations.
 - [Control argument](CONTROL.md) defines the state set, assumptions, optimizer closure, influence of prior context and proof-preserving insertion.
 - [Measured results](CORPUS_RESULTS.md) reports the corpus split, actual update counts, training and held-out losses, state bounds, free-language failures and limits.
+- [Aggregate measurements](corpus-evidence/summary.json) records the four fits and the independent checkpoint comparison. The exporter checks local receipts and artifact pins, then selects fixed numerical fields.
 - `corpus_io.py` validates externally supplied documents, rights metadata and split assignments. `corpus_model.py` implements byte encoding, prefill, cached decoding and the actual constrained and comparison recurrent dynamics.
 - `pretrain.py` is the training entry point. `semantic_eval.py` is a separate downstream evaluator. `corpus_sensitivity.py` tests the influence of earlier hidden state on ordinary byte sequences. Evaluation cases are never passed to the optimizer.
 
@@ -28,9 +31,15 @@ $pin = & $py -B prepare_corpus.py --spec $localSpec --root $corpusRoot --output 
 
 To resume, use a fresh receipt and output directory, supply `--resume` pointing at the preceding `checkpoint.pt`, and pass its exact SHA-256 using `--resume-sha256`. The additional step count must keep the total at or below the fixed 128-update smoke endpoint. For a comparison from scratch select `--arm unconstrained`. The actual run specification, source counts, stop criteria and evidence are in [the protocol](SMOKE_PROTOCOL.md) and [the results](CORPUS_RESULTS.md). Terminal downstream evaluation requires both `--semantic-fixture` and `--semantic-sha256`. Its schema is documented in the scorer. Those fictional prompts play no part in training.
 
+To reproduce the packaged aggregate from retained private runs, use the commands below from this checkout and choose a new output filename. If you use different run names, the exporter accepts four role-specific overrides and a verification receipt name. Its four expected run directories correspond to first 64, resumed 128, uninterrupted 128 and comparison 128. Each run's supervisor receipt belongs beside its directory.
+
+```powershell
+& $py -I -S -B launch.py --site $torchSite --mode verify-resume --receipt ../certified-runs/new-verify.json -- --resumed ../certified-runs/corpus-resume128-a --uninterrupted ../certified-runs/corpus-cert128-a
+& $py -B export_corpus_evidence.py --runs ../certified-runs --verification-name new-verify.json --out ../new-corpus-summary.json
+```
+
 ## Comparing outputs honestly
 
 A tiny model can reduce its prediction loss on prose and still produce unreadable text. Evaluate byte prediction, intelligible free generation, decision coverage, semantic contradictions and the formal invariant separately. Greedy generation, typed provenance, a fixed first query and finite FP32 execution are part of the decision contract. Stochastic decoding, misleading synonyms and a false source record require different arguments.
 
 Earlier fictional route experiments are available at the repository's parent release. This branch's tree intentionally excludes their raw answers and all local texts, checkpoints and private evaluation material.
-

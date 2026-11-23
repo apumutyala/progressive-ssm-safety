@@ -25,7 +25,7 @@ def load(folder):
     result = torch.load(io.BytesIO(buf),map_location="cpu",weights_only=True)
     if result["step"]!=128 or result["arm"]!="certified":
         raise ValueError("Expected the two certified fixed endpoints")
-    return result
+    return result, proof["sha256"]
 
 
 if __name__=="__main__":
@@ -33,7 +33,11 @@ if __name__=="__main__":
     p.add_argument("--resumed",type=Path,required=True)
     p.add_argument("--uninterrupted",type=Path,required=True)
     args=p.parse_args()
-    answer=compare_checkpoint_states(load(args.resumed),load(args.uninterrupted))
+    resumed, resumed_pin = load(args.resumed)
+    uninterrupted, uninterrupted_pin = load(args.uninterrupted)
+    answer = compare_checkpoint_states(resumed, uninterrupted)
+    answer.update(resumed_checkpoint_sha256=resumed_pin,
+                  uninterrupted_checkpoint_sha256=uninterrupted_pin)
     print(json.dumps(answer,sort_keys=True))
     if not answer["exact_equal"]:
         raise SystemExit(1)
