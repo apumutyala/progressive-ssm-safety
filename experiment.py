@@ -564,7 +564,7 @@ class Runner:
             'cuda_rng': torch.cuda.get_rng_state_all() if self.a.device == 'cuda' else None}
         buffer = io.BytesIO(); torch.save(cpu_tree(checkpoint), buffer)
         ckpt = buffer.getvalue()
-        results = json.dumps(report, indent=2, allow_nan=False).encode()
+        results = json.dumps(report, separators=(',', ':'), allow_nan=False).encode()
         if len(ckpt) + len(results) > 4*1024**2 - 512*1024:
             raise RuntimeError('Run artifact cap exceeded; no partial/truncated raw-output release.')
         for name, payload in [('checkpoint.pt', ckpt), ('results.json', results)]:
