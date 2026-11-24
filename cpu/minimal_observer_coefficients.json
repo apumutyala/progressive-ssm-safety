@@ -1,0 +1,29 @@
+{
+  "description": "Minimal synthetic, CPU-fitted affine proof fixture; not a language-model checkpoint.",
+  "rows_by_token_id": [
+    [
+      -4,
+      0
+    ],
+    [
+      0,
+      8
+    ],
+    [
+      4,
+      0
+    ],
+    [
+      0,
+      -8
+    ]
+  ],
+  "semantics": {
+    "0": "flip",
+    "1": "write_true",
+    "2": "hold",
+    "3": "write_false",
+    "4": "fixed invalidate (no fitted coefficients)"
+  },
+  "kernel": "signed shrink at 5, saturation at 3 before and after additive disturbance in {-1,0,1}"
+}
