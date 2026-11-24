@@ -1,0 +1,33 @@
+# Atomic intent reference: narrow theorem and execution boundary
+
+This isolated successor repairs transaction-interface omissions; it is not a new learned module, framing/renderer, numerical model or real sink. It reuses the exact existing 16-request routed grammar without adding spellings. Supplied learned/cache proposals choose a route; grammar equality can reject but never correct that choice. The parent's independent source mapping review and all earlier artifacts remain intact.
+
+## State and transitions
+
+Reference is an immutable domain, initial/current budget, 16 exact-route evidence/grant rows with separate monotone revision counters, global frontier, model revision, issued exact-byte registry, consumed nonces, commit receipts and sticky halted bit. No learned cache is in this protected authority state. Accepted authenticated events advance frontier; stale/equal well-formed revisions hold the complete row. Schema failures or event-cap exhaustion halt AtomicHost. Model revision changes advance frontier, invalidate pending intents and certify no new learned semantics; failed revision admission also halts. Halt has no reset API.
+
+issue_step checks the actual request against the supplied route and current positive evidence+grant; it reserves an increasing local nonce and stores exact immutable intent bytes in owned state. Packet fields bind domain, exact request hex, full route, evidence/grant revisions, frontier, model revision and unit cost. A hash or parsed caller field is never sufficient membership evidence. commit_step matches exact bytes to an issued record, checks the actual current request, unconsumed nonce, frontier/model revision, current row and remaining budget, then returns consumption, budget decrement and receipt in ONE state transition.
+
+AtomicHost serializes apply/revise/issue/commit through the SAME lock, with no callbacks or external operations under that lock. Protected state is initialized once and never restored from a learned cache. inspect returns immutable state for observation, not a restoration capability. Python private fields and frozen dataclasses are trusted code conventions, not isolation against arbitrary process code.
+
+Caps are 64 accepted events, 8 model revisions, 16 issued intents and initial budget1..16; request<=512 bytes and intent<=2048 bytes. Event/revision faults stop future issue/commit, including already issued packets. Issue/commit rejection preserves authority/budget/consumption. These are logical bounds, not a complete physical Python allocation bound. Wrong/stale events do not change external reality: authentication, correct counters, timely delivery, nonreuse and truthful positive evidence remain host premises.
+
+## Conditional theorem (source argument; not kernel-checked)
+
+Assume one trusted AtomicHost lineage and its complete mediation, authentic actual-request bytes/events, lock-correct serialized execution, and no unmodeled protected-state mutation, rollback or crash. For any finite sequence of successful transitions and handled Reject outcomes:
+
+1. Budget is nonnegative; budget + number of consumed nonces = initial budget. Consumed nonces are unique and belong to issued records.
+2. Every commit receipt corresponds to one exact issued immutable intent, its actual request, current frontier/model revision and a positive+granted current row at that transition's linearization point. A consumed exact intent cannot commit again in that lineage.
+3. Accepted newer revocation/invalidation or model revision prevents every earlier-frontier intent from committing. A failed fresh event at cap or malformed event halts, so pending intent cannot evade exhaustion. A later regrant cannot revive an old packet because frontier is monotone (ABA protection).
+4. A stale restored learned cache may suggest a route but cannot restore a grant, row/version, nonce, budget or frontier. Reissue always checks current protected authority. Global frontier invalidates unrelated-route changes too: conservative loss of availability is intentional.
+5. Nonvacuity: after correctly typed positive evidence and grant for either of two different routes, in an unhalted reachable state with budget and issue capacity remaining and no intervening change, issuing the correct route yields a reachable successful modeled commit. Multiple distinct intents can commit while separately consuming budget. This is not one-use grant semantics.
+
+Proof shape: initial establishes empty unique issued/consumed ledgers and the budget equation. Each event changes only its row/frontier; each revision changes only revision/frontier; rejection leaves state or sets sticky halt; issue appends a fresh numbered immutable record without consumption; commit's guards identify exactly one unconsumed issued nonce and license, and its single successor appends that nonce/receipt and subtracts exactly one. Induction establishes these facts. The executable bookkeeping_invariant checks necessary accounting facts, not historical truth or all theorem premises. No Lean acceptance, universal Python refinement, memory-model proof or learned semantic certificate is claimed.
+
+The pure commit_step function alone is forkable on old Reference values: it is a transition relation, not a global transaction manager. AtomicHost's non-rollback, single-lineage lock assumption is essential. Route epoch (1/2) remains a categorical coordinate; observing epoch2 does not itself retire epoch1. Such source-wide retirement would require an additional explicit trusted policy and is not implemented.
+
+## What this does not give an external sink
+
+A local atomic modeled commit appends only an in-memory receipt. It sends nothing. Revocation after the linearization point cannot retroactively cancel that receipt. Executing an external effect later based on a saved approval has a check/use race; the fixture demonstrates that counterexample without a real send. A real actuator needs common transactional state or an enforceable fencing/idempotency protocol and authoritative request identity. Recreating the same domain/history can repeat nonces and packets after restart; the fixture demonstrates this too. No crash durability, distributed exactly-once, cross-host uniqueness or continuous external-authority guarantee is supplied.
+
+The numerical learned selector's correctness and language interpretation remain separate open obligations. Positive synthetic proposals are supplied interface inputs, not trained predictions or evidence of alignment progress. This repair establishes a useful reference boundary for later certified learned choices without claiming that an external shield proves intrinsic model alignment.

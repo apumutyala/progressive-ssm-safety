@@ -1,0 +1,23 @@
+{
+  "schema": "portable-correspondence-fixture-binding-v1",
+  "base_owner_attestation": {
+    "commit": "f1ccb1f5aec8a2199b28e9dcc29889826287f3c7",
+    "tree": "15505a99571df7fbe7d6fbd0a7fe34494ffb57bc",
+    "claim": "Source-owner attestation associates commit/tree to file bytes; not independently Git-verified"
+  },
+  "reference_pins": {
+    "base_corpus_model.py": "08e436529335138395580e3b28db011257ac48969266261c5f0c49725fe14c93",
+    "base_interval_model.py": "421f17b442105dea44fa44192f3c87be518a5f85d211b2edb8210c9296cc536a",
+    "base_qualification_model.py": "a1b41c310451617b613ff8dd606db8900f4e4ffb5f4d703f2fb2f0958185fe6f",
+    "qualification_model.py": "a1b41c310451617b613ff8dd606db8900f4e4ffb5f4d703f2fb2f0958185fe6f",
+    "routed_cases.py": "84ce38b98feb6cbfc8af201aba1ed36799077936c12e8eafb4352eaacc66b092",
+    "routed_neural.py": "208c4ddca7d93b61256fc7534c312004ca90ca503b968a2a97cf3183a0e64302",
+    "routed_state.py": "f0d13e57142376fb96badb330a313378db40f38db463867bf089d468c25458dc"
+  },
+  "prior_witness_pins": {
+    "prior_byte_witness.json": "87a843643ecde7b872b667cd808787442dd226e2fd294e79a2f1edf1e141d195"
+  },
+  "historical_reported_status": "ISOLATED_PASS_REFERENCE_BINDING_BLOCKED",
+  "current_identity_status": "Commit-versus-file-hash clarification resolved; semantic bridge unproved",
+  "scope": "Portable finite mapping fixtures; no neural execution or native parity"
+}

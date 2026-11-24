@@ -1,0 +1,1 @@
+{"heads":{"left":{"b":0,"mask":[1],"w":[256]},"right":{"b":0,"mask":[1],"w":[-256]}},"schema":"quantized-binder-v1","transitions":{"set_ab":[[16,192]],"set_ba":[[16,-192]],"swap":[[-384,0]]},"width":1}

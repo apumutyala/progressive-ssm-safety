@@ -1,0 +1,112 @@
+{
+  "positive_each_referent": [
+    {
+      "input_ascii": "bind A B\nask left\n",
+      "pending": {
+        "binder_generation": 0,
+        "binder_model_sha": "8c5e8584727772630567cec333d813c0e77f5a271b96aab002913782455ae094",
+        "combined_state_sha": "93bf85a9bdccde62c56b1ce2192ba78385a69d4510082473f761781cb7fa3ead",
+        "decision": "YES",
+        "first_role": "left",
+        "reserved_query_id": 6,
+        "schema": "pending-typed-query-v1",
+        "scope": "scope-one",
+        "source": 17,
+        "source_epoch": 3,
+        "source_snapshot_sha": "2aa2560d307c90d8ae34272bd3b0d0f775e57a436c97138b2959374913c4c8d5",
+        "status": "PENDING_NOT_RELEASED",
+        "subject": 1,
+        "ticket": 1
+      },
+      "released": [
+        "scope-one",
+        "left",
+        1,
+        "YES",
+        17,
+        3
+      ]
+    },
+    {
+      "input_ascii": "bind A B\nswap\nask left\n",
+      "pending": {
+        "binder_generation": 0,
+        "binder_model_sha": "8c5e8584727772630567cec333d813c0e77f5a271b96aab002913782455ae094",
+        "combined_state_sha": "94d3315a2b6f1e40261d97b7c07ca111bc4df4e5bc825e88d06affa6fd2cccdc",
+        "decision": "YES",
+        "first_role": "left",
+        "reserved_query_id": 7,
+        "schema": "pending-typed-query-v1",
+        "scope": "scope-one",
+        "source": 29,
+        "source_epoch": 3,
+        "source_snapshot_sha": "3c3f024101b2f6629f93f126251e5bbf1de260f47b7102beada39de7632ffd37",
+        "status": "PENDING_NOT_RELEASED",
+        "subject": 2,
+        "ticket": 1
+      },
+      "released": [
+        "scope-one",
+        "left",
+        2,
+        "YES",
+        29,
+        3
+      ]
+    }
+  ],
+  "strong_combined": {
+    "before_growth_pending": {
+      "binder_generation": 0,
+      "binder_model_sha": "8c5e8584727772630567cec333d813c0e77f5a271b96aab002913782455ae094",
+      "combined_state_sha": "7b33e6997841bb999ea00022109aec44bfa618333b1b3cd26c13d55876fb85bc",
+      "decision": "YES",
+      "first_role": "left",
+      "reserved_query_id": 7,
+      "schema": "pending-typed-query-v1",
+      "scope": "scope-growth",
+      "source": 29,
+      "source_epoch": 4,
+      "source_snapshot_sha": "ca8a86f8aa56390bee3a65d9300208e6e3d63e69066e0fbbb397ee751d44dfc9",
+      "status": "PENDING_NOT_RELEASED",
+      "subject": 2,
+      "ticket": 1
+    },
+    "fresh_after_growth": {
+      "binder_generation": 1,
+      "binder_model_sha": "fbbd2f6afbbe5b7f50aa152f22299c00456d029ad4ff24f3be093131f5ab7fab",
+      "combined_state_sha": "58cc204330a7574403d99503abfd0d721f3a0b34205165273613f5ab567f905c",
+      "decision": "YES",
+      "first_role": "left",
+      "reserved_query_id": 7,
+      "schema": "pending-typed-query-v1",
+      "scope": "scope-growth",
+      "source": 29,
+      "source_epoch": 4,
+      "source_snapshot_sha": "ca8a86f8aa56390bee3a65d9300208e6e3d63e69066e0fbbb397ee751d44dfc9",
+      "status": "PENDING_NOT_RELEASED",
+      "subject": 2,
+      "ticket": 2
+    },
+    "input_ascii": "bind A B\nswap\nask left\nask right\n",
+    "renewed_release": [
+      "scope-growth",
+      "left",
+      2,
+      "YES",
+      29,
+      6
+    ],
+    "restore_invalidates_pending_reason": "pending-output-not-current",
+    "revoked_release": [
+      "scope-growth",
+      "left",
+      2,
+      "NO",
+      29,
+      5
+    ],
+    "stale_cache_reason": "combined-cache-not-current-owned",
+    "stale_output_reason": "pending-output-not-current"
+  }
+}

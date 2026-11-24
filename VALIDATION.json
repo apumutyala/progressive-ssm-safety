@@ -1,0 +1,59 @@
+{
+  "schema": "formal-portable-export-validation-v1",
+  "status": "PASS",
+  "total_tests": 59,
+  "packages": [
+    {
+      "errors": 0,
+      "failures": 0,
+      "package": "quantized_binder",
+      "status": "PASS",
+      "tests": 20,
+      "torch_imported": false
+    },
+    {
+      "errors": 0,
+      "failures": 0,
+      "package": "byte_query",
+      "status": "PASS",
+      "tests": 19,
+      "torch_imported": false
+    },
+    {
+      "errors": 0,
+      "failures": 0,
+      "package": "correspondence",
+      "status": "PASS",
+      "tests": 7,
+      "torch_imported": false
+    },
+    {
+      "errors": 0,
+      "failures": 0,
+      "package": "atomic_reference",
+      "status": "PASS",
+      "tests": 13,
+      "torch_imported": false
+    }
+  ],
+  "source_tested_manifest_sha256": "a33e0665adf9340b9157a3a417a4353fa895902b41488107d567fbb3ffadf74b",
+  "post_test_changes": "Only this portable validation summary and its manifest hash; research/test code unchanged",
+  "entry_point": "python -I -S -B verify.py all",
+  "runtime": "CPython 3.12 standard library; no external packages installed",
+  "protected_negative_cases": [
+    "wrong referent with both routes authorized",
+    "revoked current state versus restored stale cache",
+    "duplicate exact intent consumption and two-thread race",
+    "newer revocation at event-cap exhaustion",
+    "growth/update pending-output invalidation"
+  ],
+  "limits": [
+    "Finite tests and source arguments, not accepted mechanized proofs",
+    "No actual learned LM semantic correspondence",
+    "No real sink/durability/distributed exactly-once",
+    "No private histories/checkpoints/heldouts/tooling shipped"
+  ],
+  "mechanized_proofs_accepted": 0,
+  "neural_forward_or_training": false,
+  "publication_or_push": false
+}
