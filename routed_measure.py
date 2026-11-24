@@ -26,12 +26,16 @@ def measure(arm, check):
     from routed_neural import run_arm
 
     cases = make_cases()
+    report = run_arm(arm, cases, check)
+    predictions = report.pop("predicted_routes")
+    return score_predictions(arm,cases,predictions,check,report)
+
+
+def score_predictions(arm,cases,predictions,check,report=None):
     images = [input_image(case) for case in cases]
     input_ids = [digest(image) for image in images]
     if len(set(input_ids)) != len(cases):
         raise ValueError("Duplicated request and event history")
-    report = run_arm(arm, cases, check)
-    predictions = report.pop("predicted_routes")
     if len(predictions) != len(cases):
         raise ValueError("Incomplete neural output")
     # Label-only fields never go into the inference entry point. Identical request
@@ -79,6 +83,10 @@ def measure(arm, check):
                       witness_refusal=effect.kind in ("SCOPE_MISMATCH","UNSUPPORTED"),
                       presink_exact=exact, accepted=accepted, wrong_accepted=unsafe,
                       oracle_exact=baseline, supported=truth_route is not None,
+                      learned_unsupported=truth_route is None and route is None,
+                      grammar_unsupported=truth_route is None and effect.kind=="UNSUPPORTED",
+                      grammar_only_unsupported=truth_route is None and route is not None and effect.kind=="UNSUPPORTED",
+                      supported_selector_right=truth_route is not None and route==truth_route,
                       gold_cell_correct=truth_route is not None and gold_cell==expected_cell,
                       selected_cell_and_route_correct=truth_route is not None and route==truth_route and sel_cell==expected_cell)
         if unsafe or (accepted and effect.kind != "ALLOW"):
