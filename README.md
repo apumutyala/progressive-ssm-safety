@@ -1,4 +1,21 @@
-# Growing a language model under a decision guarantee
+# Growing state-space models under a decision guarantee
+
+Can a model learn a new skill without changing how it handles its old one, or letting unsupported evidence authorize a decision? We test those questions separately from whether the model can understand and answer ordinary language.
+
+| Experiment | What worked | What did not |
+|---|---|---|
+| **Typed plans with corrections** | A grown policy completed 32/32 held histories; a narrow policy completed 0/32. Removing the added memory bank erased the gain. | A policy that started wide also scored 32/32. Growth did not beat starting wide. |
+| **A second typed skill** | The isolated grown policy kept old scores bit-identical and learned a second six-step skill, 24/24 held histories at each of two seeds. | The same histories were reused across seeds. Full-width controls tied its action accuracy. |
+| **A pretrained language model** | An added 220,896-parameter bank left original-mode predictions bit-identical on three test prompts. Held prose loss fell from 3.7934 to 3.6673 nats per token for the prose-only bank. | All arms got 0/48 matched query pairs right by answer ranking and 0/96 exact complete answers. No bank was promoted. |
+| **Full-model diagnostic** | Matching answer-token budgets let us test whether a frozen backbone was the bottleneck. | Neither arm solved any complete group, even on the training panel. The full copy said red when directly given red or blue. |
+
+[Latest results](reports/2026-11-25/RESULTS.md) · [Analysis and proof boundaries](reports/2026-11-25/ANALYSIS.md) · [Audit the released scores](reports/2026-11-25/RESULTS.md#audit-and-reproduction)
+
+The structural rules concern defined decisions on authenticated records. The language model can still misunderstand a sentence or give a wrong answer. This is not a proof of general alignment or that generated text is safe.
+
+## Original experiment and reproduction
+
+The following entry point covers the original public implementation. The latest report provides an evidence audit of the newer local runs, not their training checkpoints.
 
 Can a language model gain useful reasoning capacity without gaining the ability to approve an unsupported plan? This project trains a small autoregressive state-space model from scratch. It predicts every next token, consumes a prompt in one pass, then generates words one at a time from its recurrent state. Its vocabulary includes two reserved decision tokens, `<confirm>` and `<defer>`. Both compete directly with all ordinary words.
 

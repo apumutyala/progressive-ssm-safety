@@ -34,8 +34,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 6630,
-      "sha256": "43c5de35d65f3800587f8e1c73e4eafae8d02a5816cfd708f215a43b2b2c565f"
+      "bytes": 8657,
+      "sha256": "241b1a93d1a705093c7277bf5c930dc6f20af76e8a2d0416f688b34c5ada8602"
     },
     {
       "path": "RESEARCH.md",
@@ -446,6 +446,26 @@
       "path": "prefix_bound.py",
       "bytes": 12605,
       "sha256": "e6b101d31a40e787eb23674bd3f5d3be4b7329679c6e74b269bdb9292baffd0a"
+    },
+    {
+      "path": "reports/2026-11-25/ANALYSIS.md",
+      "bytes": 4107,
+      "sha256": "afe8d708088fb837f1e5d5b3d8205f856716e59febe737e604ec1c2d2da84717"
+    },
+    {
+      "path": "reports/2026-11-25/RESULTS.md",
+      "bytes": 6252,
+      "sha256": "794bf8c74632682a36464a88ff061f9fd17b3a7f8110b0d3b9888f4afa8c229b"
+    },
+    {
+      "path": "reports/2026-11-25/check_evidence.py",
+      "bytes": 1943,
+      "sha256": "92c0c787edcc829b8bd4a339a31509339ad68c7ee4554f5cdb236538da29dcba"
+    },
+    {
+      "path": "reports/2026-11-25/evidence.json",
+      "bytes": 9930,
+      "sha256": "11e5b5923cbb55df0feb625a1a8ee292d4a7f7a798ff3a9867369c8795aa751f"
     },
     {
       "path": "route_probe.py",

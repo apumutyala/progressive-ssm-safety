@@ -1,0 +1,327 @@
+{
+  "schema": 1,
+  "source_sha256": {
+    "progressive-plan-v1/rollouts.json": "712a5df59ec21c308d522b51c282bef2579cea0fde1b0ee50d698d7ceb4373f5",
+    "progressive-plan-v1/metrics.json": "e7b1af99f22cec277234941b537951b8735f108d8c81dee7c4bcd13ea3807827",
+    "progressive-skills-v2/reached-rollouts.json": "4f11b47a788664575244953db60a9c6c2c57d6788430abd53fe5b11c176f73af",
+    "progressive-skills-v2/metrics.json": "8aeb9974b713681ba4bd6f9db1f66acefa779b7567237290fcd501ae3c5d3d1e",
+    "routed-language-growth-v1/predictions.json": "166e71e11165df4e8464d58c40a768f08a2b6ac2592936724b86f2995cf78753",
+    "routed-language-growth-v1/metrics.json": "d54f6e15d7559b9a9ebcb690bfe3e63455c438575db3af2a0cbe5ada1504084a",
+    "routed-language-growth-v1/query-pairs.json": "7da2a2a0fe386bd8246c6b84ede378ad7f65fd71ccb7ccd18397bb302565c359"
+  },
+  "typed_plan": {
+    "narrow": {
+      "outcomes": {
+        "base": "CPPPPPPPPPPPPPPPPCPPCPPCPPSPCPPC",
+        "A_edit": "PCCCPCPPCCCPPPPCCPCPPPCPCCPPPPPP",
+        "B_edit": "PCCCCCCCPPPPCPPCPPCCPCPPCPCCPPPP",
+        "withdraw": "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",
+        "conflict": "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",
+        "sham": "CPPPPPPPPPPPPPPPPCPPCPPCPPSPCPPC",
+        "restore": "CPPPPPPPPPPPPPPPPCPPCPPCPPSPCPPC"
+      },
+      "strict": 0,
+      "params": 60,
+      "updates": 837,
+      "scalar_updates": 50220
+    },
+    "grown": {
+      "outcomes": {
+        "base": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "A_edit": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "B_edit": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "withdraw": "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",
+        "conflict": "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",
+        "sham": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "restore": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+      },
+      "strict": 32,
+      "strict_ablated": 0,
+      "params": 186,
+      "updates": 333,
+      "scalar_updates": 50220
+    },
+    "wide": {
+      "outcomes": {
+        "base": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "A_edit": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "B_edit": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "withdraw": "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",
+        "conflict": "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",
+        "sham": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "restore": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+      },
+      "strict": 32,
+      "params": 186,
+      "updates": 270,
+      "scalar_updates": 50220
+    }
+  },
+  "typed_skills": {
+    "49711": {
+      "old_before": 24,
+      "new_at_insertion": 0,
+      "arms": {
+        "isolated": {
+          "old": 24,
+          "new": 24,
+          "exact_final": true,
+          "scalar_updates": 71712,
+          "params": 324,
+          "swap_old": 0,
+          "swap_new": 0
+        },
+        "free": {
+          "old": 24,
+          "new": 24,
+          "exact_final": false,
+          "scalar_updates": 97632,
+          "params": 324
+        },
+        "narrow": {
+          "old": 24,
+          "new": 0,
+          "exact_final": false,
+          "scalar_updates": 71712,
+          "params": 216
+        },
+        "offline": {
+          "old": 24,
+          "new": 24,
+          "exact_final": false,
+          "scalar_updates": 97632,
+          "params": 324
+        }
+      }
+    },
+    "71387": {
+      "old_before": 24,
+      "new_at_insertion": 0,
+      "arms": {
+        "isolated": {
+          "old": 24,
+          "new": 24,
+          "exact_final": true,
+          "scalar_updates": 71712,
+          "params": 324,
+          "swap_old": 0,
+          "swap_new": 0
+        },
+        "free": {
+          "old": 24,
+          "new": 24,
+          "exact_final": false,
+          "scalar_updates": 97632,
+          "params": 324
+        },
+        "narrow": {
+          "old": 24,
+          "new": 0,
+          "exact_final": false,
+          "scalar_updates": 71712,
+          "params": 216
+        },
+        "offline": {
+          "old": 24,
+          "new": 24,
+          "exact_final": false,
+          "scalar_updates": 97632,
+          "params": 324
+        }
+      }
+    }
+  },
+  "language_growth": {
+    "parent": {
+      "public_nats": 3.793371948366037,
+      "domain_nats": {
+        "wiki": 3.4153895010842295,
+        "technical": 4.254079979709566,
+        "narrative": 3.7106463643043144
+      },
+      "exact_bits": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "eos_bits": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "both_outrank_foil_bits": "000000000000000000000000000000000000000000000000",
+      "query_changed_bits": "001000100000000000000000000000000000000000000000",
+      "examples": [
+        {
+          "prompt": "The mug was left inside the shed. The flute was left inside the attic. Where would I find the mug?",
+          "answer": " In the shed.",
+          "text": " I had not thought of the man who had been a man",
+          "ids": [
+            320,
+            355,
+            395,
+            522,
+            301,
+            269,
+            565,
+            608,
+            355,
+            884,
+            266,
+            565
+          ],
+          "ended": false,
+          "margin": -3.481508731842041
+        },
+        {
+          "prompt": "The mug was left inside the attic. The flute was left inside the shed. Where would I find the mug?",
+          "answer": " In the attic.",
+          "text": " I had not thought of the man who had been a man",
+          "ids": [
+            320,
+            355,
+            395,
+            522,
+            301,
+            269,
+            565,
+            608,
+            355,
+            884,
+            266,
+            565
+          ],
+          "ended": false,
+          "margin": 3.447782278060913
+        }
+      ]
+    },
+    "ordinary": {
+      "public_nats": 3.66726644048601,
+      "domain_nats": {
+        "wiki": 3.402202015486678,
+        "technical": 3.931279278929375,
+        "narrative": 3.6683180270419773
+      },
+      "exact_bits": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "eos_bits": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "both_outrank_foil_bits": "000000000000000000000000000000000000000000000000",
+      "query_changed_bits": "110110101011000000110000000000000111011011010011",
+      "examples": [
+        {
+          "prompt": "The mug was left inside the shed. The flute was left inside the attic. Where would I find the mug?",
+          "answer": " In the shed.",
+          "text": " I had not thought of it. I had not thought of",
+          "ids": [
+            320,
+            355,
+            395,
+            522,
+            301,
+            331,
+            21,
+            320,
+            355,
+            395,
+            522,
+            301
+          ],
+          "ended": false,
+          "margin": -3.0850327014923096
+        },
+        {
+          "prompt": "The mug was left inside the attic. The flute was left inside the shed. Where would I find the mug?",
+          "answer": " In the attic.",
+          "text": " I had not thought of it. I had not thought of",
+          "ids": [
+            320,
+            355,
+            395,
+            522,
+            301,
+            331,
+            21,
+            320,
+            355,
+            395,
+            522,
+            301
+          ],
+          "ended": false,
+          "margin": 3.0453217029571533
+        }
+      ]
+    },
+    "mixture": {
+      "public_nats": 3.743322380860668,
+      "domain_nats": {
+        "wiki": 3.4280013713426096,
+        "technical": 4.037675524330276,
+        "narrative": 3.7642902469091166
+      },
+      "exact_bits": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "eos_bits": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "both_outrank_foil_bits": "000000000000000000000000000000000000000000000000",
+      "query_changed_bits": "000000010000000000000000100000000000000000000001",
+      "examples": [
+        {
+          "prompt": "The mug was left inside the shed. The flute was left inside the attic. Where would I find the mug?",
+          "answer": " In the shed.",
+          "text": " In the hall. Where did the bedroom? In",
+          "ids": [
+            638,
+            269,
+            2546,
+            21,
+            429,
+            656,
+            700,
+            269,
+            2108,
+            2420,
+            38,
+            638
+          ],
+          "ended": false,
+          "margin": -1.7285860925912857
+        },
+        {
+          "prompt": "The mug was left inside the attic. The flute was left inside the shed. Where would I find the mug?",
+          "answer": " In the attic.",
+          "text": " In the hall. Where did the bedroom? In",
+          "ids": [
+            638,
+            269,
+            2546,
+            21,
+            429,
+            656,
+            700,
+            269,
+            2108,
+            2420,
+            38,
+            638
+          ],
+          "ended": false,
+          "margin": 1.6964341849088669
+        }
+      ]
+    }
+  },
+  "query_pair_report": {
+    "parent": {
+      "query_pairs": 48,
+      "any_raw_change": 2,
+      "both_exact_and_eos": 0,
+      "both_correct_likelihood_preferences": 0,
+      "both_contain_reference_phrase": 0
+    },
+    "ordinary": {
+      "query_pairs": 48,
+      "any_raw_change": 20,
+      "both_exact_and_eos": 0,
+      "both_correct_likelihood_preferences": 0,
+      "both_contain_reference_phrase": 0
+    },
+    "mixture": {
+      "query_pairs": 48,
+      "any_raw_change": 3,
+      "both_exact_and_eos": 0,
+      "both_correct_likelihood_preferences": 0,
+      "both_contain_reference_phrase": 0
+    }
+  }
+}
